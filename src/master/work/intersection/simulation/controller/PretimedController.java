@@ -9,6 +9,8 @@ public class PretimedController extends Controller {
 
     @Override
     protected void launch() {
-
+        while(isOn()){
+            System.out.println("Hello");
+        }
     }
 }
