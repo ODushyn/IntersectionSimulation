@@ -1,5 +1,7 @@
 package master.work.intersection.simulation.main;
 
+import master.work.intersection.simulation.detector.util.Distribution;
+
 import java.util.Calendar;
 
 /**
@@ -8,13 +10,20 @@ import java.util.Calendar;
 public abstract class Controller {
 
     protected Intersection intersection;
-    private long startTime = Calendar.getInstance().getTime().getTime();
-    private int activeTime = 1000;
+    protected TrafficLight trafficLight;
+    protected Distribution distribution;
+    private long startTime = currentTime();
+    private int simulationTime = 4000;
+    protected static int PHASE_TIME = 2000;
 
     protected abstract void launch();
 
     protected boolean isOn(){
-        return (Calendar.getInstance().getTime().getTime() - startTime) < activeTime;
+        return (Calendar.getInstance().getTime().getTime() - startTime) < simulationTime;
 
+    }
+
+    protected long currentTime(){
+        return Calendar.getInstance().getTime().getTime();
     }
 }

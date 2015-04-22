@@ -10,7 +10,20 @@ public class PretimedController extends Controller {
     @Override
     protected void launch() {
         while(isOn()){
-            System.out.println("Hello");
+            while(currentTime() - intersection.getCurrentPhase().getPhaseTime() < PHASE_TIME){
+                simulateTraffic();
+            }
+
+            nextPhase();
+
         }
+    }
+
+    protected void simulateTraffic(){
+
+    }
+
+    private void nextPhase() {
+        intersection.switchOnNextPhaseFromQueue();
     }
 }
