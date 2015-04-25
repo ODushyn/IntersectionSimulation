@@ -1,6 +1,5 @@
 package master.work.intersection.simulation.controller;
 
-import master.work.intersection.simulation.detector.util.Distribution;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.statistics.Statistics;
@@ -11,21 +10,21 @@ import master.work.intersection.simulation.statistics.Statistics;
 public class PretimedController extends Controller {
 
 
-    public PretimedController(Intersection intersection, Distribution distribution, Statistics statistics) {
-        super(intersection, distribution, statistics);
+    public PretimedController(Intersection intersection, Statistics statistics) {
+        super(intersection, statistics);
     }
 
     @Override
     protected void launch() {
         intersection.setLastVehicleRemoveTime(currentTime());
+        statistics.activePhaseStatistics();
         while(isOn()){
-            statistics.getNumberOfVehiclesOnEachPhase();
-            while(currentTime() - intersection.getCurrentPhase().getPhaseTime() < PHASE_TIME){
-                System.out.println("Here");
+            while(intersection.greenPhaseTime() < PHASE_TIME){
                 simulateTraffic();
             }
+            statistics.allPhasesStatistics();
             nextPhase();
-            statistics.getNumberOfVehiclesOnEachPhase();
+            statistics.activePhaseStatistics();
         }
     }
 

@@ -17,7 +17,8 @@ public abstract class Intersection {
     //TODO: change this parameter with multi threads
     private long lastVehicleRemoveTime;
 
-    public Intersection(int phases, int directions){
+    public Intersection(Distribution distribution, int phases, int directions){
+        this.distribution = distribution;
         initPhases(new Phase[phases]);
         initDirections(new Direction[directions]);
     }
@@ -37,13 +38,23 @@ public abstract class Intersection {
 
     }
 
+    public long greenPhaseTime(){
+        return currentPhase.greenWaitingTime();
+    }
+
+    public long redPhaseTime(){
+        return currentPhase.redWaitingTime();
+    }
+
     public void switchOnNextPhaseFromQueue(){
-        if(currentPhase.getPhaseName() == getPhases().length){
+        this.currentPhase.reset();
+        if(currentPhase.getName() == getPhases().length - 1){
             this.currentPhase = getPhases()[0];
         }else{
-            this.currentPhase = getPhases()[currentPhase.getPhaseName()];
+            this.currentPhase = getPhases()[currentPhase.getName() + 1];
         }
-        System.out.println(currentPhase.getPhaseName());
+        this.currentPhase.setUp();
+        System.out.println("Next phase: " + currentPhase.getName());
     }
 
     private void initPhases(Phase phases[]){
@@ -74,6 +85,7 @@ public abstract class Intersection {
 
     public void setCurrentPhase(Phase phase) {
         this.currentPhase =  phase;
+        this.currentPhase.setUp();
     }
 
     public Direction[] getDirections() {

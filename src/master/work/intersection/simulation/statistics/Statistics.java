@@ -15,25 +15,28 @@ public class Statistics {
         this.intersection = intersection;
     }
 
-    public void getNumberOfVehiclesOnEachPhase(){
-        int currentPhaseNumber = intersection.getCurrentPhase().getPhaseName();
+    public void activePhaseStatistics(){
         outputPhaseInfo(intersection.getCurrentPhase());
+    }
+
+    public void allPhasesStatistics(){
         for(Phase phase : intersection.getPhases()){
-            if(phase.getPhaseName() != currentPhaseNumber)
             outputPhaseInfo(phase);
         }
     }
 
     private void outputPhaseInfo(Phase phase){
-        System.out.println();
-        System.out.print(phase.getPhaseTime());
+        System.out.println("Phase: " + phase.getName());
+        System.out.print("Red time: " + phase.redWaitingTime());
+        System.out.print(" ");
+        System.out.print("Green time: " + phase.greenWaitingTime());
         System.out.println(" ");
         for(Direction direction : phase.getActiveDirections()){
-            System.out.print(direction.getDirectionName());
+            System.out.print("Direction: " + direction.getName());
             System.out.print(" ");
-            System.out.print(direction.getNumberOfVehicles());
+            System.out.print("Vehicles: " + direction.getNumberOfVehicles());
             System.out.print(" ");
-            System.out.println(direction.getWaitingTime());
+            System.out.println("Waiting time:" + direction.getRedWaitingTime());
         }
         System.out.println();
     }

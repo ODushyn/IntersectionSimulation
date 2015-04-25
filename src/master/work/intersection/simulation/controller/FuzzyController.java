@@ -13,8 +13,8 @@ public class FuzzyController extends Controller{
 
     protected Detector detector;
 
-    public FuzzyController(Intersection intersection, Distribution distribution, Statistics statistics) {
-        super(intersection, distribution, statistics);
+    public FuzzyController(Intersection intersection, Statistics statistics) {
+        super(intersection, statistics);
     }
 
     @Override
