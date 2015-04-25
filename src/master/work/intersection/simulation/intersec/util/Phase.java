@@ -1,14 +1,16 @@
 package master.work.intersection.simulation.intersec.util;
 
-import master.work.intersection.simulation.intersec.util.*;
-
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public class Phase {
     private Direction activeDirections[];
     private int phaseTime;
-    private int orderNumber;
+    private int phaseName;
+
+    public Phase(int phaseName) {
+        this.phaseName = phaseName;
+    }
 
     /*public void addDirections(Direction... directions){
         activeDirections = directions;
@@ -30,11 +32,11 @@ public class Phase {
         this.phaseTime = phaseTime;
     }
 
-    public int getOrderNumber() {
-        return orderNumber;
+    public int getPhaseName() {
+        return phaseName;
     }
 
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setPhaseName(int phaseName) {
+        this.phaseName = phaseName;
     }
 }

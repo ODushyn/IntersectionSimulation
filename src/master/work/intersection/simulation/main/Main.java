@@ -1,6 +1,10 @@
 package master.work.intersection.simulation.main;
 
 import master.work.intersection.simulation.controller.PretimedController;
+import master.work.intersection.simulation.detector.util.Distribution;
+import master.work.intersection.simulation.detector.util.RandomDistribution;
+import master.work.intersection.simulation.intersec.FourWayIntersection;
+import master.work.intersection.simulation.statistics.Statistics;
 
 public class Main {
 
@@ -8,7 +12,11 @@ public class Main {
 
         System.out.println("Hello World!");
 
-        Controller controller = new PretimedController();
+        Intersection intersection = new FourWayIntersection(4, 12);
+        Distribution distribution = new RandomDistribution();
+
+        Controller controller = new PretimedController(intersection, distribution, new Statistics(intersection));
+
         controller.launch();
 
     }

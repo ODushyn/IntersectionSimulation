@@ -1,6 +1,7 @@
 package master.work.intersection.simulation.main;
 
 import master.work.intersection.simulation.detector.util.Distribution;
+import master.work.intersection.simulation.statistics.Statistics;
 
 import java.util.Calendar;
 
@@ -10,13 +11,19 @@ import java.util.Calendar;
 public abstract class Controller {
 
     protected Intersection intersection;
-    protected TrafficLight trafficLight;
     protected Distribution distribution;
+    protected Statistics statistics;
     private long startTime = currentTime();
-    private int simulationTime = 4000;
-    protected static int PHASE_TIME = 2000;
+    private int simulationTime = 10000;
+    protected static int PHASE_TIME = 5000;
 
     protected abstract void launch();
+
+    public Controller(Intersection intersection, Distribution distribution, Statistics statistics) {
+        this.intersection = intersection;
+        this.distribution = distribution;
+        this.statistics = statistics;
+    }
 
     protected boolean isOn(){
         return (Calendar.getInstance().getTime().getTime() - startTime) < simulationTime;
@@ -24,6 +31,7 @@ public abstract class Controller {
     }
 
     protected long currentTime(){
+
         return Calendar.getInstance().getTime().getTime();
     }
 }

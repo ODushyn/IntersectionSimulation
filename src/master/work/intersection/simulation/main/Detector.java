@@ -7,6 +7,4 @@ import master.work.intersection.simulation.detector.util.Distribution;
  */
 public class Detector {
 
-    private Distribution distribution;
-
 }

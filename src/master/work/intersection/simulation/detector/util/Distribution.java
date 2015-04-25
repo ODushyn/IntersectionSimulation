@@ -3,9 +3,8 @@ package master.work.intersection.simulation.detector.util;
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
-public class Distribution {
+public abstract class Distribution {
 
-    public int getNumberOfArrivedVehicles(){
-       return 0;
-    }
+    public abstract int getNumberOfArrivedVehicles();
+
 }

@@ -5,8 +5,25 @@ package master.work.intersection.simulation.intersec.util;
  */
 public class Direction {
 
+    private int directionName;
     private int numberOfVehicles;
     private int waitingTime;
+
+    public Direction(int directionName) {
+        this.directionName = directionName;
+    }
+
+    public void addVehiclesToQueue(int n){
+
+        this.numberOfVehicles += n;
+    }
+
+    public void removeVehicleFromQueue(){
+        if(numberOfVehicles > 0){
+            this.numberOfVehicles -= 1;
+        }
+
+    }
 
     public int getNumberOfVehicles() {
         return numberOfVehicles;
@@ -22,5 +39,13 @@ public class Direction {
 
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = waitingTime;
+    }
+
+    public int getDirectionName() {
+        return directionName;
+    }
+
+    public void setDirectionName(int directionName) {
+        this.directionName = directionName;
     }
 }
