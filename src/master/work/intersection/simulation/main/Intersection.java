@@ -16,6 +16,7 @@ public abstract class Intersection {
 
     //TODO: change this parameter with multi threads
     private long lastVehicleRemoveTime;
+    private long lastDistributionTime;
 
     public Intersection(Distribution distribution, int phases, int directions){
         this.distribution = distribution;
@@ -29,11 +30,16 @@ public abstract class Intersection {
         for(Direction direction : currentPhase.getActiveDirections() ){
             direction.removeVehicleFromQueue();
         }
+        this.lastVehicleRemoveTime = Controller.currentTime();
     }
 
-    public void simulateDistribution(){
-        for(Direction direction : directions){
-            direction.addVehiclesToQueue(distribution.getNumberOfArrivedVehicles());
+    public void simulateDistribution(int time){
+        if(Controller.currentTime() - lastDistributionTime > time) {
+            for (Direction direction : directions) {
+                direction.addVehiclesToQueue(distribution.getNumberOfArrivedVehicles());
+                //System.out.println(direction.getName() + " : " + direction.getQueue());
+            }
+            lastDistributionTime = Controller.currentTime();
         }
 
     }
@@ -98,5 +104,11 @@ public abstract class Intersection {
 
     public void setLastVehicleRemoveTime(long lastVehicleRemoveTime) {
         this.lastVehicleRemoveTime = lastVehicleRemoveTime;
+    }
+    public long getLastDistributionTime() {
+        return lastDistributionTime;
+    }
+    public void setLastDistributionTime(long lastDistributionTime) {
+        this.lastDistributionTime = lastDistributionTime;
     }
 }

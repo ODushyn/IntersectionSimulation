@@ -11,7 +11,7 @@ import java.util.Calendar;
 public abstract class Controller {
     //TODO: replace this parameters
     private static final long startTime = Controller.currentTime();
-    private int simulationTime = 10000;
+    private int simulationTime = 900000;
     protected static int PHASE_TIME = 5000;
 
     protected Intersection intersection;

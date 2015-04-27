@@ -34,7 +34,7 @@ public class Statistics {
         for(Direction direction : phase.getActiveDirections()){
             System.out.print("Direction: " + direction.getName());
             System.out.print(" ");
-            System.out.print("Vehicles: " + direction.getNumberOfVehicles());
+            System.out.print("Vehicles: " + direction.getQueue());
             System.out.print(" ");
             System.out.println("Waiting time:" + direction.getRedWaitingTime());
         }

@@ -17,6 +17,7 @@ public class PretimedController extends Controller {
     @Override
     protected void launch() {
         intersection.setLastVehicleRemoveTime(currentTime());
+        intersection.setLastDistributionTime(currentTime());
         statistics.activePhaseStatistics();
         while(isOn()){
             while(intersection.greenPhaseTime() < PHASE_TIME){
@@ -29,8 +30,8 @@ public class PretimedController extends Controller {
     }
 
     protected void simulateTraffic(){
-        intersection.simulateDistribution();
-        if((currentTime() - intersection.getLastVehicleRemoveTime()) > 2000) {
+        intersection.simulateDistribution(4000);
+        if((currentTime() - intersection.getLastVehicleRemoveTime()) > 1000) {
             intersection.simulateVehicleMoveAway();
         }
     }
@@ -39,4 +40,5 @@ public class PretimedController extends Controller {
 
         intersection.switchOnNextPhaseFromQueue();
     }
+
 }
