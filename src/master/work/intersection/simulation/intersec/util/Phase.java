@@ -6,7 +6,7 @@ import master.work.intersection.simulation.main.Controller;
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public class Phase {
-    private Direction activeDirections[];
+    private Direction directions[];
     private long redStartTime;
     private long greenStartTime;
     private int name;
@@ -30,22 +30,37 @@ public class Phase {
         return Controller.currentTime() - greenStartTime;
     }
 
-    public void reset(){
+
+    public void deactivate(){
         this.redStartTime = Controller.currentTime();
         this.greenStartTime = 0;
+        deactivateDirections();
     }
 
-    public void setUp(){
+    public void activate(){
         this.redStartTime = 0;
         this.greenStartTime = Controller.currentTime();
+        activateDirections();
     }
 
-    public Direction[] getActiveDirections() {
-        return activeDirections;
+    private void activateDirections(){
+        for(Direction d : directions){
+            d.setActive(true);
+        }
     }
 
-    public void setActiveDirections(Direction... activeDirections) {
-        this.activeDirections = activeDirections;
+    private void deactivateDirections(){
+        for(Direction d : directions){
+            d.setActive(false);
+        }
+    }
+
+    public Direction[] getDirections() {
+        return directions;
+    }
+
+    public void setDirections(Direction... directions) {
+        this.directions = directions;
     }
 
     public int getName() {

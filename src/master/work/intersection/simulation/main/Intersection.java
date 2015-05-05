@@ -9,57 +9,40 @@ import master.work.intersection.simulation.intersec.util.Phase;
  */
 public abstract class Intersection {
 
-    private Distribution distribution;
+    public static Distribution distribution;
     private Direction directions[];
     private Phase phases[];
     protected Phase currentPhase;
-
-    //TODO: change this parameter with multi threads
-    private long lastVehicleRemoveTime;
-    private long lastDistributionTime;
 
     public Intersection(Distribution distribution, int phases, int directions){
         this.distribution = distribution;
         initPhases(new Phase[phases]);
         initDirections(new Direction[directions]);
+        init();
+    }
+
+    public void launchDirections(){
+        for(Phase p : phases){
+            for(Direction d: p.getDirections()){
+                d.start();
+            }
+        }
     }
 
     protected abstract void init();
-
-    public void simulateVehicleMoveAway(){
-        for(Direction direction : currentPhase.getActiveDirections() ){
-            direction.removeVehicleFromQueue();
-        }
-        this.lastVehicleRemoveTime = Controller.currentTime();
-    }
-
-    public void simulateDistribution(int time){
-        if(Controller.currentTime() - lastDistributionTime > time) {
-            for (Direction direction : directions) {
-                direction.addVehiclesToQueue(distribution.getNumberOfArrivedVehicles());
-                //System.out.println(direction.getName() + " : " + direction.getQueue());
-            }
-            lastDistributionTime = Controller.currentTime();
-        }
-
-    }
 
     public long greenPhaseTime(){
         return currentPhase.greenWaitingTime();
     }
 
-    public long redPhaseTime(){
-        return currentPhase.redWaitingTime();
-    }
-
     public void switchOnNextPhaseFromQueue(){
-        this.currentPhase.reset();
+        this.currentPhase.deactivate();
         if(currentPhase.getName() == getPhases().length - 1){
             this.currentPhase = getPhases()[0];
         }else{
             this.currentPhase = getPhases()[currentPhase.getName() + 1];
         }
-        this.currentPhase.setUp();
+        this.currentPhase.activate();
         System.out.println("Next phase: " + currentPhase.getName());
     }
 
@@ -91,24 +74,7 @@ public abstract class Intersection {
 
     public void setCurrentPhase(Phase phase) {
         this.currentPhase =  phase;
-        this.currentPhase.setUp();
+        this.currentPhase.activate();
     }
 
-    public Direction[] getDirections() {
-        return directions;
-    }
-
-    public long getLastVehicleRemoveTime() {
-        return lastVehicleRemoveTime;
-    }
-
-    public void setLastVehicleRemoveTime(long lastVehicleRemoveTime) {
-        this.lastVehicleRemoveTime = lastVehicleRemoveTime;
-    }
-    public long getLastDistributionTime() {
-        return lastDistributionTime;
-    }
-    public void setLastDistributionTime(long lastDistributionTime) {
-        this.lastDistributionTime = lastDistributionTime;
-    }
 }

@@ -1,6 +1,5 @@
 package master.work.intersection.simulation.main;
 
-import master.work.intersection.simulation.detector.util.Distribution;
 import master.work.intersection.simulation.statistics.Statistics;
 
 import java.util.Calendar;
@@ -9,28 +8,40 @@ import java.util.Calendar;
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public abstract class Controller {
-    //TODO: replace this parameters
-    private static final long startTime = Controller.currentTime();
-    private int simulationTime = 900000;
-    protected static int PHASE_TIME = 5000;
+
+    private static final long START_TIME = Controller.currentTime();
+
+    // General constants
+    public static int SIMULATION_DURATION_TIME = 900000;
+    public static int PHASE_TIME = 5000;
+
+    // Direction distribution constants
+    public static int DISTRIBUTION_PERIOD_TIME = 2500;
+    public static int VEHICLE_REMOVE_PERIOD_TIME = 1500;
 
     protected Intersection intersection;
     protected Statistics statistics;
 
-    public Controller(Intersection intersection, Statistics statistics) {
+    public Controller(Intersection intersection) {
         this.intersection = intersection;
-        this.statistics = statistics;
+        this.statistics = new Statistics(intersection);
     }
 
     protected abstract void launch();
 
-    protected boolean isOn(){
-        return (Controller.currentTime() - startTime) < simulationTime;
-
+    public static boolean isOn(){
+        return (Controller.currentTime() - START_TIME) < SIMULATION_DURATION_TIME;
     }
 
-    public static long currentTime(){
+    public synchronized static long currentTime(){
         return Calendar.getInstance().getTime().getTime();
     }
 
+    public synchronized static boolean isTimeUp(long finishTime, long duration){
+        return currentTime() - finishTime > duration;
+    }
+
+    public synchronized static boolean isTimeUp(long finishTime, long startTime, long duration){
+        return finishTime - startTime > duration;
+    }
 }

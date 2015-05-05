@@ -10,35 +10,18 @@ import master.work.intersection.simulation.statistics.Statistics;
 public class PretimedController extends Controller {
 
 
-    public PretimedController(Intersection intersection, Statistics statistics) {
-        super(intersection, statistics);
+    public PretimedController(Intersection intersection) {
+        super(intersection);
     }
 
     @Override
     protected void launch() {
-        intersection.setLastVehicleRemoveTime(currentTime());
-        intersection.setLastDistributionTime(currentTime());
-        statistics.activePhaseStatistics();
+        intersection.launchDirections();
         while(isOn()){
-            while(intersection.greenPhaseTime() < PHASE_TIME){
-                simulateTraffic();
+            if(intersection.greenPhaseTime() >= PHASE_TIME) {
+                intersection.switchOnNextPhaseFromQueue();
+                statistics.allPhasesStatistics();
             }
-            statistics.allPhasesStatistics();
-            nextPhase();
-            statistics.activePhaseStatistics();
         }
     }
-
-    protected void simulateTraffic(){
-        intersection.simulateDistribution(4000);
-        if((currentTime() - intersection.getLastVehicleRemoveTime()) > 1000) {
-            intersection.simulateVehicleMoveAway();
-        }
-    }
-
-    private void nextPhase() {
-
-        intersection.switchOnNextPhaseFromQueue();
-    }
-
 }

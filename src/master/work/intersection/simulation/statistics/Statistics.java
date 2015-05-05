@@ -20,9 +20,13 @@ public class Statistics {
     }
 
     public void allPhasesStatistics(){
+        System.out.println("=================================");
+        outputPhaseInfo(intersection.getCurrentPhase());
         for(Phase phase : intersection.getPhases()){
+            if(phase != intersection.getCurrentPhase())
             outputPhaseInfo(phase);
         }
+        System.out.println("=================================");
     }
 
     private void outputPhaseInfo(Phase phase){
@@ -31,7 +35,7 @@ public class Statistics {
         System.out.print(" ");
         System.out.print("Green time: " + phase.greenWaitingTime());
         System.out.println(" ");
-        for(Direction direction : phase.getActiveDirections()){
+        for(Direction direction : phase.getDirections()){
             System.out.print("Direction: " + direction.getName());
             System.out.print(" ");
             System.out.print("Vehicles: " + direction.getQueue());
