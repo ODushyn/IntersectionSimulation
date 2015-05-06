@@ -1,9 +1,9 @@
 package master.work.intersection.simulation.main;
 
 import master.work.intersection.simulation.controller.PretimedController;
+
 import master.work.intersection.simulation.detector.util.RandomDistribution;
 import master.work.intersection.simulation.intersec.FourWayIntersection;
-import master.work.intersection.simulation.statistics.Statistics;
 
 public class Main {
 
