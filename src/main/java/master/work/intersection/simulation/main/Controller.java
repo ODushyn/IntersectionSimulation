@@ -10,14 +10,16 @@ import java.util.Calendar;
 public abstract class Controller {
 
     private static final long START_TIME = Controller.currentTime();
+    public static final int UNIT_OF_TIME = 1000;
 
     // General constants
     public static int SIMULATION_DURATION_TIME = 900000;
-    public static int PHASE_TIME = 5000;
+    public static int PHASE_TIME = 15000;
 
     // Direction distribution constants
-    public static int DISTRIBUTION_PERIOD_TIME = 2500;
-    public static int VEHICLE_REMOVE_PERIOD_TIME = 1500;
+
+    public static double VEHICLE_ARRIVAL_RATE = 0.3;
+    public static double VEHICLE_LEAVING_RATE = 1;
 
     protected Intersection intersection;
     protected Statistics statistics;

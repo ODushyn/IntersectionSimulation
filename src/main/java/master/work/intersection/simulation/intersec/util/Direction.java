@@ -8,7 +8,7 @@ import master.work.intersection.simulation.main.Intersection;
  */
 public class Direction extends Thread{
 
-    private int queue;
+    private double queue;
     //TODO: make this parameter work (measure waitin time for each direction)
     private int redWaitingTime;
     private boolean active;
@@ -29,7 +29,7 @@ public class Direction extends Thread{
     }
 
     private void simulateVehicleMoveAway(){
-        if(active && Controller.isTimeUp(Controller.currentTime(), lastVehicleRemoveTime, Controller.VEHICLE_REMOVE_PERIOD_TIME)) {
+        if(active && Controller.isTimeUp(Controller.currentTime(), lastVehicleRemoveTime, Controller.UNIT_OF_TIME)) {
             removeVehicleFromQueue();
 
         }
@@ -37,25 +37,25 @@ public class Direction extends Thread{
     }
 
     private void simulateDistribution(){
-        if(Controller.isTimeUp(Controller.currentTime(), lastDistributionTime, Controller.DISTRIBUTION_PERIOD_TIME)) {
-            addVehiclesToQueue(Intersection.distribution.getNumberOfArrivedVehicles());
+        if(Controller.isTimeUp(Controller.currentTime(), lastDistributionTime, Controller.UNIT_OF_TIME)) {
+            addVehiclesToQueue();
         }
     }
 
-    private void addVehiclesToQueue(int n){
-        this.queue += n;
+    private void addVehiclesToQueue(){
+        this.queue += Intersection.distribution.getNumberOfArrivedVehicles();
         lastDistributionTime = Controller.currentTime();
     }
 
     private void removeVehicleFromQueue(){
         if(queue > 0){
-            this.queue -= 1;
+            this.queue -= Controller.VEHICLE_LEAVING_RATE;
         }
         this.lastVehicleRemoveTime = Controller.currentTime();
     }
 
-    public int getQueue() {
-        return queue;
+    public double getQueue() {
+        return Math.floor(queue);
     }
 
     public int getRedWaitingTime() {
