@@ -29,7 +29,14 @@ public abstract class Controller {
         this.statistics = new Statistics(intersection);
     }
 
-    protected abstract void launch();
+    protected void launch(){
+        intersection.launchDirections();
+        while(isOn()){
+            regulate();
+        }
+    }
+
+    protected abstract void regulate();
 
     public static boolean isOn(){
         return (Controller.currentTime() - START_TIME) < SIMULATION_DURATION_TIME;

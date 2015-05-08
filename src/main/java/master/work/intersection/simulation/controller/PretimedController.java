@@ -15,13 +15,11 @@ public class PretimedController extends Controller {
     }
 
     @Override
-    protected void launch() {
-        intersection.launchDirections();
-        while(isOn()){
-            if(intersection.greenPhaseTime() >= PHASE_TIME) {
-                intersection.switchOnNextPhaseFromQueue();
-                statistics.allPhasesStatistics();
-            }
+    protected void regulate() {
+        if(intersection.greenPhaseTime() >= PHASE_TIME) {
+            intersection.switchOnNextPhaseFromQueue();
+            statistics.allPhasesStatistics();
         }
+
     }
 }

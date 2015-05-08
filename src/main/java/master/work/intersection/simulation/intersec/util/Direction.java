@@ -9,7 +9,7 @@ import master.work.intersection.simulation.main.Intersection;
 public class Direction extends Thread{
 
     private double queue;
-    //TODO: make this parameter work (measure waitin time for each direction)
+    //TODO: make this parameter work (measure waiting time for each direction)
     private int redWaitingTime;
     private boolean active;
     private long lastVehicleRemoveTime = Controller.currentTime();
