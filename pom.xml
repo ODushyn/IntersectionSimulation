@@ -28,6 +28,14 @@
             <artifactId>commons-math</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.pcingola</groupId>
+            <artifactId>jFuzzyLogic</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
+
+
 
 </project>
