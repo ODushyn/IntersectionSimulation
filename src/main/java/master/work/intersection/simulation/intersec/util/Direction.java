@@ -24,7 +24,7 @@ public class Direction extends Thread{
         while(Controller.isOn()) {
             simulateDistribution();
             simulateVehicleMoveAway();
-            //System.out.println(getName() + " " + queue);
+            //System.out.println(getNumber() + " " + queue);
         }
     }
 

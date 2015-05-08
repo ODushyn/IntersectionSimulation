@@ -9,10 +9,10 @@ public class Phase {
     private Direction directions[];
     private long redStartTime;
     private long greenStartTime;
-    private int name;
+    private int number;
 
-    public Phase(int name) {
-        this.name = name;
+    public Phase(int number) {
+        this.number = number;
         this.redStartTime = Controller.currentTime();
     }
 
@@ -63,8 +63,8 @@ public class Phase {
         this.directions = directions;
     }
 
-    public int getName() {
-        return name;
+    public int getNumber() {
+        return number;
     }
 
 }

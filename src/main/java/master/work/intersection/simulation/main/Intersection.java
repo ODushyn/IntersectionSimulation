@@ -37,13 +37,20 @@ public abstract class Intersection {
 
     public void switchOnNextPhaseFromQueue(){
         this.currentPhase.deactivate();
-        if(currentPhase.getName() == getPhases().length - 1){
+        if(currentPhase.getNumber() == getPhases().length - 1){
             this.currentPhase = getPhases()[0];
         }else{
-            this.currentPhase = getPhases()[currentPhase.getName() + 1];
+            this.currentPhase = getPhases()[currentPhase.getNumber() + 1];
         }
         this.currentPhase.activate();
-        System.out.println("Next phase: " + currentPhase.getName());
+        System.out.println("Next phase: " + currentPhase.getNumber());
+    }
+
+    public void switchOnSpecifiedPhase(int num){
+        this.currentPhase.deactivate();
+        this.currentPhase = getPhases()[num];
+        this.currentPhase.activate();
+        System.out.println("Next phase: " + currentPhase.getNumber());
     }
 
     private void initPhases(Phase phases[]){

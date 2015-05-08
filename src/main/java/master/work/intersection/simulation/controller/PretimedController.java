@@ -20,6 +20,5 @@ public class PretimedController extends Controller {
             intersection.switchOnNextPhaseFromQueue();
             statistics.allPhasesStatistics();
         }
-
     }
 }

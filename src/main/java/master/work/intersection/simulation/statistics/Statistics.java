@@ -30,7 +30,7 @@ public class Statistics {
     }
 
     private void outputPhaseInfo(Phase phase){
-        System.out.println("Phase: " + phase.getName());
+        System.out.println("Phase: " + phase.getNumber());
         System.out.print("Red time: " + phase.redWaitingTime());
         System.out.print(" ");
         System.out.print("Green time: " + phase.greenWaitingTime());
