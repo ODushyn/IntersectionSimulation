@@ -30,6 +30,13 @@ public class Phase {
         return Controller.currentTime() - greenStartTime;
     }
 
+    public int waitingVehicles(){
+        int vehiclesTotal = 0;
+        for(Direction d : directions){
+            vehiclesTotal += d.getQueue();
+        }
+        return vehiclesTotal;
+    }
 
     public void deactivate(){
         this.redStartTime = Controller.currentTime();

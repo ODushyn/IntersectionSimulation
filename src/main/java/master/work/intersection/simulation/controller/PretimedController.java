@@ -16,7 +16,7 @@ public class PretimedController extends Controller {
 
     @Override
     protected void regulate() {
-        if(intersection.greenPhaseTime() >= PHASE_TIME) {
+        if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
             intersection.switchOnNextPhaseFromQueue();
             statistics.allPhasesStatistics();
         }

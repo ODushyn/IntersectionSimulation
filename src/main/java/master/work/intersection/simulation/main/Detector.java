@@ -5,40 +5,23 @@ package master.work.intersection.simulation.main;
  */
 public class Detector {
 
-    private int delayTimeOfRedPhase;
-    private int waitingVehiclesOfRedPhase;
-    private int waitingVehiclesOfNextGreenPhase;
-    private int waitingVehiclesOfCurrentGreenPhase;
+    private Intersection intersection;
 
-    public int getDelayTimeOfRedPhase() {
-        return delayTimeOfRedPhase;
+
+    public Detector(Intersection intersection) {
+        this.intersection = intersection;
     }
 
-    public void setDelayTimeOfRedPhase(int delayTimeOfRedPhase) {
-        this.delayTimeOfRedPhase = delayTimeOfRedPhase;
+    public int waitingVehiclesOfRedPhase() {
+        return 0;
     }
 
-    public int getWaitingVehiclesOfRedPhase() {
-        return waitingVehiclesOfRedPhase;
+    public int waitingVehiclesOfNextGreenPhase() {
+        return 0;
     }
 
-    public void setWaitingVehiclesOfRedPhase(int waitingVehiclesOfRedPhase) {
-        this.waitingVehiclesOfRedPhase = waitingVehiclesOfRedPhase;
+    public int waitingVehiclesOfCurrentGreenPhase() {
+        return 0;
     }
 
-    public int getWaitingVehiclesOfNextGreenPhase() {
-        return waitingVehiclesOfNextGreenPhase;
-    }
-
-    public void setWaitingVehiclesOfNextGreenPhase(int waitingVehiclesOfNextGreenPhase) {
-        this.waitingVehiclesOfNextGreenPhase = waitingVehiclesOfNextGreenPhase;
-    }
-
-    public int getWaitingVehiclesOfCurrentGreenPhase() {
-        return waitingVehiclesOfCurrentGreenPhase;
-    }
-
-    public void setWaitingVehiclesOfCurrentGreenPhase(int waitingVehiclesOfCurrentGreenPhase) {
-        this.waitingVehiclesOfCurrentGreenPhase = waitingVehiclesOfCurrentGreenPhase;
-    }
 }

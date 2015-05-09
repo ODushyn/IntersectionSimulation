@@ -1,5 +1,9 @@
 package master.work.intersection.simulation.fuzzy;
 
+import master.work.intersection.simulation.intersec.util.Phase;
+
+import java.util.List;
+
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
@@ -9,13 +13,11 @@ public class FuzzyUrgencyEvaluator {
 
     /**
      * Calculates urgency and decide what phase is next
-     * @param delayTimeOfRedPhase
-     * @param waitingVehiclesOfRedPhase
      * @return number of next phase
      */
-    public int nextGreenPhase(int delayTimeOfRedPhase, int waitingVehiclesOfRedPhase){
+    public Phase nextGreenPhase(List<UrgencyEvaluatorInput> input){
         //TODO: do logic here
-        return 0;
+        return new Phase(1);
     }
 
 

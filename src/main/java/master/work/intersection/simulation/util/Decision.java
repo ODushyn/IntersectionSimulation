@@ -1,27 +1,29 @@
 package master.work.intersection.simulation.util;
 
+import master.work.intersection.simulation.intersec.util.Phase;
+
 /**
  * Created by Oleksander.Dushyn on 5/8/2015.
  */
 public class Decision {
 
-    private int nextGreenPhase;
-    private int currentGreenPhase;
+    private Phase nextGreenPhase;
+    private Phase currentGreenPhase;
     private int delayTimeOfGreenPhase;
 
-    public int getNextGreenPhase() {
+    public Phase getNextGreenPhase() {
         return nextGreenPhase;
     }
 
-    public void setNextGreenPhase(int nextGreenPhase) {
+    public void setNextGreenPhase(Phase nextGreenPhase) {
         this.nextGreenPhase = nextGreenPhase;
     }
 
-    public int getCurrentGreenPhase() {
+    public Phase getCurrentGreenPhase() {
         return currentGreenPhase;
     }
 
-    public void setCurrentGreenPhase(int currentGreenPhase) {
+    public void setCurrentGreenPhase(Phase currentGreenPhase) {
         this.currentGreenPhase = currentGreenPhase;
     }
 

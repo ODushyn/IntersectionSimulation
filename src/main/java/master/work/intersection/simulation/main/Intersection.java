@@ -31,10 +31,6 @@ public abstract class Intersection {
 
     protected abstract void init();
 
-    public long greenPhaseTime(){
-        return currentPhase.greenWaitingTime();
-    }
-
     public void switchOnNextPhaseFromQueue(){
         this.currentPhase.deactivate();
         if(currentPhase.getNumber() == getPhases().length - 1){
@@ -53,6 +49,17 @@ public abstract class Intersection {
         System.out.println("Next phase: " + currentPhase.getNumber());
     }
 
+    public Phase[] redPhases(){
+        Phase[] phases = new Phase[this.phases.length - 1];
+        int i = 0;
+        for(Phase p : phases){
+            if(p != currentPhase){
+                phases[i] = p;
+                i++;
+            }
+        }
+        return phases;
+    }
     private void initPhases(Phase phases[]){
         this.phases = phases;
         for(int i=0; i < this.phases.length; i++){
@@ -66,7 +73,7 @@ public abstract class Intersection {
             this.directions[i] = new Direction(i);
         }
     }
-
+    
     public Direction getDirection(int number){
         return directions[number];
     }

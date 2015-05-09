@@ -1,5 +1,7 @@
 package master.work.intersection.simulation.fuzzy;
 
+import master.work.intersection.simulation.intersec.util.Phase;
+import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.util.Decision;
 
 /**
@@ -7,11 +9,14 @@ import master.work.intersection.simulation.util.Decision;
  */
 public class FuzzyDecisionMaker {
 
+    private Intersection intersection;
+
+
     /**
      * Create the decision about the further phase
      * @return decision with current green phase, delay time of it and next green phase
      */
-    public Decision getFinalDecision(int nextGreenPhase, int waitingVehiclesOfNextGreenPhase, int waitingVehiclesOfCurrentGreenPhase){
+    public Decision getFinalDecision(Phase nextGreenPhase, int waitingVehiclesOfNextGreenPhase, int waitingVehiclesOfCurrentGreenPhase){
         Decision decision =  new Decision();
         decision.setNextGreenPhase(nextGreenPhase);
 

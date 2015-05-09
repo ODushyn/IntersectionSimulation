@@ -17,15 +17,16 @@ public abstract class Controller {
     public static int PHASE_TIME = 15000;
 
     // Direction distribution constants
-
     public static double VEHICLE_ARRIVAL_RATE = 0.3;
     public static double VEHICLE_LEAVING_RATE = 1;
 
     protected Intersection intersection;
+    protected Detector detector;
     protected Statistics statistics;
 
     public Controller(Intersection intersection) {
         this.intersection = intersection;
+        this.detector = new Detector(intersection);
         this.statistics = new Statistics(intersection);
     }
 
