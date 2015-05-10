@@ -1,14 +1,11 @@
 package master.work.intersection.simulation.controller;
 
-import master.work.intersection.simulation.detector.util.Distribution;
 import master.work.intersection.simulation.fuzzy.FuzzyDecisionMaker;
 import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
 import master.work.intersection.simulation.fuzzy.UrgencyEvaluatorInput;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
-import master.work.intersection.simulation.main.Detector;
 import master.work.intersection.simulation.main.Intersection;
-import master.work.intersection.simulation.statistics.Statistics;
 import master.work.intersection.simulation.util.Decision;
 
 import java.util.ArrayList;
@@ -26,8 +23,8 @@ public class FuzzyController extends Controller{
 
     public FuzzyController(Intersection intersection) {
         super(intersection);
+        urgencyEvaluator = new FuzzyUrgencyEvaluator(intersection.getPhases().length);
         decisionMaker = new FuzzyDecisionMaker();
-        urgencyEvaluator = new FuzzyUrgencyEvaluator();
     }
 
 
@@ -35,9 +32,9 @@ public class FuzzyController extends Controller{
     @Override
     protected void regulate() {
         if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
-            this.nextPhase = urgencyEvaluator.nextGreenPhase(generateUEInput());
+            this.nextPhase = urgencyEvaluator.nextGreenPhase(generateUEInput(), intersection.getCurrentPhase());
             this.decision = decisionMaker.getFinalDecision(nextPhase, nextPhase.waitingVehicles(), intersection.getCurrentPhase().waitingVehicles());
-            intersection.switchOnSpecifiedPhase(nextPhase.getNumber());
+            intersection.switchOnSpecifiedPhase(nextPhase);
             statistics.allPhasesStatistics();
         }
     }

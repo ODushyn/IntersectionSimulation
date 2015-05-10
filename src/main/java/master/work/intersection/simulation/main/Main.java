@@ -1,5 +1,6 @@
 package master.work.intersection.simulation.main;
 
+import master.work.intersection.simulation.controller.FuzzyController;
 import master.work.intersection.simulation.controller.PretimedController;
 import master.work.intersection.simulation.detector.util.PoissonDistribution;
 import master.work.intersection.simulation.intersec.FourWayIntersection;
@@ -12,7 +13,7 @@ public class Main {
         //TODO: consider what parameters should be passed into Intersection
         Intersection intersection = new FourWayIntersection(new PoissonDistribution(), 4, 12);
 
-        Controller controller = new PretimedController(intersection);
+        Controller controller = new FuzzyController(intersection);
 
         controller.launch();
 

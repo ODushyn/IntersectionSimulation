@@ -14,7 +14,7 @@ public abstract class Controller {
 
     // General constants
     public static int SIMULATION_DURATION_TIME = 900000;
-    public static int PHASE_TIME = 15000;
+    public static int PHASE_TIME = 5000;
 
     // Direction distribution constants
     public static double VEHICLE_ARRIVAL_RATE = 0.3;

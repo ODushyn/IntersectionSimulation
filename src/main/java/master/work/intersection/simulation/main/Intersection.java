@@ -31,7 +31,7 @@ public abstract class Intersection {
 
     protected abstract void init();
 
-    public void switchOnNextPhaseFromQueue(){
+    public void switchOnNextPhaseByDefault(){
         this.currentPhase.deactivate();
         if(currentPhase.getNumber() == getPhases().length - 1){
             this.currentPhase = getPhases()[0];
@@ -42,9 +42,9 @@ public abstract class Intersection {
         System.out.println("Next phase: " + currentPhase.getNumber());
     }
 
-    public void switchOnSpecifiedPhase(int num){
+    public void switchOnSpecifiedPhase(Phase phase){
         this.currentPhase.deactivate();
-        this.currentPhase = getPhases()[num];
+        this.currentPhase = phase;
         this.currentPhase.activate();
         System.out.println("Next phase: " + currentPhase.getNumber());
     }

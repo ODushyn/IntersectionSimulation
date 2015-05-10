@@ -2,7 +2,6 @@ package master.work.intersection.simulation.controller;
 
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
-import master.work.intersection.simulation.statistics.Statistics;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
@@ -17,7 +16,7 @@ public class PretimedController extends Controller {
     @Override
     protected void regulate() {
         if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
-            intersection.switchOnNextPhaseFromQueue();
+            intersection.switchOnNextPhaseByDefault();
             statistics.allPhasesStatistics();
         }
     }
