@@ -1,0 +1,76 @@
+FUNCTION_BLOCK traffic	
+
+VAR_INPUT				
+	vehicles : REAL; // vehicles number of current red light phase - Qr
+	duration : REAL; // duration of red light since the last end of the green light - Tr
+END_VAR
+
+VAR_OUTPUT				
+	urgency : REAL; // urgency of all current red light phase - Ur
+END_VAR
+
+FUZZIFY vehicles	// Fuzzify input variable 'vehicles': {Very Short, Short, Medium, Long, Very Long}
+	TERM very_short := (0, 1) (3, 1) (6, 0) ; 
+	TERM short := (3, 0) (9, 1) (15, 0);
+	TERM medium := (9, 0) (15, 1) (21, 0);
+	TERM long := (15, 0) (21, 1) (27, 0);
+	TERM very_long := (21, 0) (27, 1) (30, 1);
+END_FUZZIFY
+
+FUZZIFY duration	// Fuzzify input variable 'duration': {Very Short, Short, Medium, Long, Very Long}
+	TERM very_short := (0, 1) (15, 1) (30,0) ;
+	TERM short := (15,0) (45,1) (75, 0);
+	TERM medium := (45,0) (75,1) (105, 0);
+	TERM long := (75,0) (105, 1) (135, 0);
+	TERM very_long := (105,0) (135,1) (150, 1);
+END_FUZZIFY
+
+DEFUZZIFY urgency			// Defuzzify output variable 'urgency' : {Very Small, Small, Medium, Big, Very Big}
+	TERM very_small := (0,1) (0.1, 1) (0.2,0);
+	TERM small := (0.1, 0) (0.3, 1) (0.5, 0);
+	TERM medium := (0.3, 0) (0.5, 1) (0.7, 0);
+	TERM big := (0.5, 0) (0.7, 1) (0.9,0);
+	TERM very_big := (0.7, 0) (0.9, 1) (1,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method
+	ACCU : MAX;			// Use 'max' accumulation method
+
+	RULE 1 :  IF vehicles IS very_short AND duration IS very_short 		THEN urgency IS very_small;
+	RULE 2 :  IF vehicles IS very_short AND duration IS short 			THEN urgency IS very_small; 
+	RULE 3 :  IF vehicles IS very_short AND duration IS medium 			THEN urgency IS small;
+	RULE 4 :  IF vehicles IS very_short AND duration IS long 			THEN urgency IS small;
+	RULE 5 :  IF vehicles IS very_short AND duration IS very_long 		THEN urgency IS medium;
+	
+	RULE 6 :  IF vehicles IS short 		AND duration IS very_short 		THEN urgency IS very_small;
+	RULE 7 :  IF vehicles IS short 		AND duration IS short 			THEN urgency IS small; 
+	RULE 8 :  IF vehicles IS short 		AND duration IS medium 			THEN urgency IS small;
+	RULE 9 :  IF vehicles IS short 		AND duration IS long 			THEN urgency IS medium;
+	RULE 10 : IF vehicles IS short 		AND duration IS very_long 		THEN urgency IS medium;
+	
+	RULE 11 :  IF vehicles IS medium 	AND duration IS very_short 		THEN urgency IS medium;
+	RULE 12 :  IF vehicles IS medium 	AND duration IS short 			THEN urgency IS small; 
+	RULE 13 :  IF vehicles IS medium 	AND duration IS medium 			THEN urgency IS medium;
+	RULE 14 :  IF vehicles IS medium 	AND duration IS long 			THEN urgency IS medium;
+	RULE 15 :  IF vehicles IS medium 	AND duration IS very_long 		THEN urgency IS big;
+	
+	RULE 16 :  IF vehicles IS long 		AND duration IS very_short 		THEN urgency IS big;
+	RULE 17 :  IF vehicles IS long 		AND duration IS short 			THEN urgency IS medium; 
+	RULE 18 :  IF vehicles IS long 		AND duration IS medium 			THEN urgency IS medium;
+	RULE 19 :  IF vehicles IS long 		AND duration IS long 			THEN urgency IS big;
+	RULE 20 :  IF vehicles IS long 		AND duration IS very_long 		THEN urgency IS very_big;
+	
+	RULE 21 :  IF vehicles IS very_long	AND duration IS very_short 		THEN urgency IS big;
+	RULE 22 :  IF vehicles IS very_long AND duration IS short 			THEN urgency IS medium; 
+	RULE 23 :  IF vehicles IS very_long AND duration IS medium 			THEN urgency IS big;
+	RULE 24 :  IF vehicles IS very_long AND duration IS long 			THEN urgency IS very_big;
+	RULE 25 :  IF vehicles IS very_long AND duration IS very_long 		THEN urgency IS very_big;
+	
+	
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
