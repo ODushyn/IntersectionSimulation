@@ -3,14 +3,18 @@ package master.work.intersection.simulation.fuzzy;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.util.Decision;
+import net.sourceforge.jFuzzyLogic.FIS;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public class FuzzyDecisionMaker {
 
-    private Intersection intersection;
+    private FIS controlRules;
 
+    public FuzzyDecisionMaker(FIS controlRules) {
+        this.controlRules = controlRules;
+    }
 
     /**
      * Create the decision about the further phase

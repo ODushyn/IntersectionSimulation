@@ -7,24 +7,35 @@ import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.util.Decision;
+import net.sourceforge.jFuzzyLogic.FIS;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
-public class FuzzyController extends Controller{
+public class FuzzyUrgencyAndDelayController extends Controller{
+
+    public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
+    public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator.fcl";
 
     private FuzzyDecisionMaker decisionMaker;
     private FuzzyUrgencyEvaluator urgencyEvaluator;
     private Phase nextPhase;
     private Decision decision;
 
-    public FuzzyController(Intersection intersection) {
+    public FuzzyUrgencyAndDelayController(Intersection intersection) {
         super(intersection);
-        urgencyEvaluator = new FuzzyUrgencyEvaluator(intersection.getPhases().length);
-        decisionMaker = new FuzzyDecisionMaker();
+        try {
+            urgencyEvaluator = new FuzzyUrgencyEvaluator(loadControlRule(URGENCY_CONTROL_RULES_PATH), intersection.getPhases().length);
+            decisionMaker = new FuzzyDecisionMaker(loadControlRule(DELAY_CONTROL_RULES_PATH));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -50,5 +61,25 @@ public class FuzzyController extends Controller{
         }
 
         return inputList;
+    }
+
+    private FIS loadControlRule(String fileName) throws FileNotFoundException {
+        FIS fis = FIS.load(getPath(fileName), true);
+
+        if( fis == null ) {
+            throw new FileNotFoundException("Can't load file: '" + fileName + "'");
+        }
+
+        return fis;
+    }
+
+    private String getPath(String fileName) throws FileNotFoundException{
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = classLoader.getResource(fileName);
+        if(url == null){
+            throw new FileNotFoundException("There is no file: '" + fileName + "'");
+        }
+        File file = new File(url.getFile());
+        return file.getPath();
     }
 }

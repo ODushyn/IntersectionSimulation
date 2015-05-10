@@ -1,6 +1,7 @@
 package master.work.intersection.simulation.fuzzy;
 
 import master.work.intersection.simulation.intersec.util.Phase;
+import net.sourceforge.jFuzzyLogic.FIS;
 
 import java.util.List;
 import java.util.Stack;
@@ -10,11 +11,12 @@ import java.util.Stack;
  */
 public class FuzzyUrgencyEvaluator {
 
-
+    private FIS controlRules;
     private int numberOfPhases;
     private Stack phaseCycle = new Stack();
 
-    public FuzzyUrgencyEvaluator(int numberOfPhases) {
+    public FuzzyUrgencyEvaluator(FIS controlRules, int numberOfPhases) {
+        this.controlRules = controlRules;
         this.numberOfPhases = numberOfPhases;
     }
 
