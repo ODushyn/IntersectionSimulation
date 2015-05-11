@@ -50,15 +50,15 @@ public abstract class Intersection {
     }
 
     public Phase[] redPhases(){
-        Phase[] phases = new Phase[this.phases.length - 1];
+        Phase[] redPhases = new Phase[this.phases.length - 1];
         int i = 0;
-        for(Phase p : phases){
+        for(Phase p : this.phases){
             if(p != currentPhase){
-                phases[i] = p;
+                redPhases[i] = p;
                 i++;
             }
         }
-        return phases;
+        return redPhases;
     }
     private void initPhases(Phase phases[]){
         this.phases = phases;

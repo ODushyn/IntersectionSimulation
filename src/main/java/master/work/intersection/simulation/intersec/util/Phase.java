@@ -6,10 +6,12 @@ import master.work.intersection.simulation.main.Controller;
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public class Phase {
+    private int number;
     private Direction directions[];
     private long redStartTime;
     private long greenStartTime;
-    private int number;
+    //URGENCY is USED in FuzzyUrgencyAndDelayController. For other controllers is used default value = 0
+    private double urgency;
 
     public Phase(int number) {
         this.number = number;
@@ -72,6 +74,14 @@ public class Phase {
 
     public int getNumber() {
         return number;
+    }
+
+    public double getUrgency() {
+        return urgency;
+    }
+
+    public void setUrgency(double urgency) {
+        this.urgency = urgency;
     }
 
     @Override

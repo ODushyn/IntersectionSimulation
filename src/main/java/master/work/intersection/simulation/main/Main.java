@@ -13,13 +13,13 @@ public class Main {
     public static void main(String[] args) {
 
         System.out.println("Hello World!");
-        
+
         //TODO: consider what parameters should be passed into Intersection
         Intersection intersection = new FourWayIntersection(new PoissonDistribution(), 4, 12);
 
         Controller controller = new FuzzyUrgencyAndDelayController(intersection);
 
-        //controller.launch();
+        controller.launch();
 
         /*PoissonDistribution p = new PoissonDistribution(0.1);
         for(int i=0; i<10; i++){

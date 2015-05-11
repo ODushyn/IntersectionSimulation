@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class FuzzyUrgencyAndDelayController extends Controller{
 
-    public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
-    public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator.fcl";
+    public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator.fcl";
+    public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
 
     private FuzzyDecisionMaker decisionMaker;
     private FuzzyUrgencyEvaluator urgencyEvaluator;
@@ -43,24 +43,11 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     @Override
     protected void regulate() {
         if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
-            this.nextPhase = urgencyEvaluator.nextGreenPhase(generateUEInput(), intersection.getCurrentPhase());
+            this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());
             this.decision = decisionMaker.getFinalDecision(nextPhase, nextPhase.waitingVehicles(), intersection.getCurrentPhase().waitingVehicles());
             intersection.switchOnSpecifiedPhase(nextPhase);
             statistics.allPhasesStatistics();
         }
-    }
-
-    private List<UrgencyEvaluatorInput> generateUEInput(){
-        List<UrgencyEvaluatorInput> inputList = new ArrayList<UrgencyEvaluatorInput>();
-
-        for(Phase phase : intersection.redPhases()){
-            UrgencyEvaluatorInput input = new UrgencyEvaluatorInput();
-            input.setPhaseNumber(phase.getNumber());
-            input.setDelayTimeOfRedPhase(phase.redWaitingTime());
-            input.setWaitingVehiclesOfRedPhase(phase.waitingVehicles());
-        }
-
-        return inputList;
     }
 
     private FIS loadControlRule(String fileName) throws FileNotFoundException {
