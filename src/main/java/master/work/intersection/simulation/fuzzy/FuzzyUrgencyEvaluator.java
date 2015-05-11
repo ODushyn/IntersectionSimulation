@@ -37,7 +37,7 @@ public class FuzzyUrgencyEvaluator {
             controlRules.evaluate();
             Variable urgency = controlRules.getVariable(URGENCY);
             System.out.println("Urgency = " + urgency.getValue());
-            redPhase.setUrgency(urgency.getValue());
+            redPhase.setUrgency(controlRules.getVariable(URGENCY).getValue());
             nextPhasesCandidates.add(redPhase);
         }
         Collections.sort(nextPhasesCandidates, new PhaseUrgencyComparator());

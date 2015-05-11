@@ -2,18 +2,14 @@ package master.work.intersection.simulation.controller;
 
 import master.work.intersection.simulation.fuzzy.FuzzyDecisionMaker;
 import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
-import master.work.intersection.simulation.fuzzy.UrgencyEvaluatorInput;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
-import master.work.intersection.simulation.util.Decision;
 import net.sourceforge.jFuzzyLogic.FIS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
@@ -26,7 +22,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     private FuzzyDecisionMaker decisionMaker;
     private FuzzyUrgencyEvaluator urgencyEvaluator;
     private Phase nextPhase;
-    private Decision decision;
+    private long delay;
 
     public FuzzyUrgencyAndDelayController(Intersection intersection) {
         super(intersection);
@@ -44,7 +40,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     protected void regulate() {
         if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
             this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());
-            this.decision = decisionMaker.getFinalDecision(nextPhase, nextPhase.waitingVehicles(), intersection.getCurrentPhase().waitingVehicles());
+            this.delay = decisionMaker.getTimeDelay(nextPhase.waitingVehicles(), intersection.getCurrentPhase().waitingVehicles());
             intersection.switchOnSpecifiedPhase(nextPhase);
             statistics.allPhasesStatistics();
         }

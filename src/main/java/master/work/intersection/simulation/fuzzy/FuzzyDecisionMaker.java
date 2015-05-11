@@ -1,8 +1,4 @@
 package master.work.intersection.simulation.fuzzy;
-
-import master.work.intersection.simulation.intersec.util.Phase;
-import master.work.intersection.simulation.main.Intersection;
-import master.work.intersection.simulation.util.Decision;
 import net.sourceforge.jFuzzyLogic.FIS;
 
 /**
@@ -10,21 +6,30 @@ import net.sourceforge.jFuzzyLogic.FIS;
  */
 public class FuzzyDecisionMaker {
 
+    private static final String GREEN_VEHICLES = "green_vehicles";
+    private static final String RED_VEHICLES = "red_vehicles";
+    private static final String DELAY = "delay";
+
     private FIS controlRules;
 
     public FuzzyDecisionMaker(FIS controlRules) {
+
         this.controlRules = controlRules;
     }
 
     /**
-     * Create the decision about the further phase
-     * @return decision with current green phase, delay time of it and next green phase
+     * Calculate the delay for the current green phase
+     * @return delay time to continue current green phase in milliseconds
      */
-    public Decision getFinalDecision(Phase nextGreenPhase, int waitingVehiclesOfNextGreenPhase, int waitingVehiclesOfCurrentGreenPhase){
-        Decision decision =  new Decision();
-        decision.setNextGreenPhase(nextGreenPhase);
+    public long getTimeDelay(int waitingVehiclesOfNextGreenPhase, int waitingVehiclesOfCurrentGreenPhase){
 
-        return decision;
+        controlRules.setVariable(GREEN_VEHICLES, waitingVehiclesOfCurrentGreenPhase);
+        controlRules.setVariable(RED_VEHICLES, waitingVehiclesOfNextGreenPhase);
+        controlRules.evaluate();
+
+        long delay = (long)(controlRules.getVariable(DELAY).getValue() * 1000);
+
+        return delay;
     }
 
 
