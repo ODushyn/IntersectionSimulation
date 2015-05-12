@@ -42,6 +42,7 @@ public class Statistics {
     public void print(){
         System.out.println("==============STATISCTICS===================");
         System.out.println("Total number of phases: " + totalNumberOfPhases);
+        System.out.println("Total waiting vehicles for all phases:" + totalVehiclesDelayForAllPhases);
         System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
         System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());
         System.out.println("Average delay ratio: " + averageVehicleDelayRatio());
