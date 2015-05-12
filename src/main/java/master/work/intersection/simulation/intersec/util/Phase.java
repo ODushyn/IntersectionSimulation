@@ -1,6 +1,7 @@
 package master.work.intersection.simulation.intersec.util;
 
 import master.work.intersection.simulation.main.Controller;
+import master.work.intersection.simulation.main.Timer;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
@@ -10,26 +11,28 @@ public class Phase {
     private Direction directions[];
     private long redStartTime;
     private long greenStartTime;
-    //URGENCY is USED in FuzzyUrgencyAndDelayController. For other controllers is used default value = 0
+    private long phaseTime;
+    //URGENCY is used in FuzzyUrgencyAndDelayController. For other controllers is used default value = 0
     private double urgency;
 
     public Phase(int number) {
         this.number = number;
-        this.redStartTime = Controller.currentTime();
+        this.redStartTime = Timer.currentTime();
+        this.phaseTime = Controller.PHASE_TIME;
     }
 
     public long redWaitingTime(){
         if(this.redStartTime == 0){
             return 0;
         }
-        return Controller.currentTime() - redStartTime;
+        return Timer.currentTime() - redStartTime;
     }
 
     public long greenWaitingTime(){
         if(this.greenStartTime == 0){
             return 0;
         }
-        return Controller.currentTime() - greenStartTime;
+        return Timer.currentTime() - greenStartTime;
     }
 
     public int waitingVehicles(){
@@ -41,14 +44,17 @@ public class Phase {
     }
 
     public void deactivate(){
-        this.redStartTime = Controller.currentTime();
+        this.redStartTime = Timer.currentTime();
         this.greenStartTime = 0;
         deactivateDirections();
     }
 
+    public void delay(long time){
+        this.phaseTime += time;
+    }
     public void activate(){
         this.redStartTime = 0;
-        this.greenStartTime = Controller.currentTime();
+        this.greenStartTime = Timer.currentTime();
         activateDirections();
     }
 
@@ -82,6 +88,14 @@ public class Phase {
 
     public void setUrgency(double urgency) {
         this.urgency = urgency;
+    }
+
+    public long getPhaseTime() {
+        return phaseTime;
+    }
+
+    public void setPhaseTime(long phaseTime) {
+        this.phaseTime = phaseTime;
     }
 
     @Override

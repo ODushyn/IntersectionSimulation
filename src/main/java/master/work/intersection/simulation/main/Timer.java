@@ -1,9 +1,21 @@
 package master.work.intersection.simulation.main;
 
-/**
- * Created by Oleksander.Dushyn on 5/5/2015.
- */
-public interface Timer {
+import java.util.Calendar;
 
-    public void repeat(int n);
+/**
+ * Created by Oleksander.Dushyn on 5/11/2015.
+ */
+public class Timer {
+
+    public synchronized static boolean repeat(long finishTime, long duration){
+        return currentTime() - finishTime > duration;
+    }
+
+    public synchronized static boolean repeat(long finishTime, long startTime, long duration){
+        return finishTime - startTime > duration;
+    }
+
+    public synchronized static long currentTime(){
+        return Calendar.getInstance().getTime().getTime();
+    }
 }

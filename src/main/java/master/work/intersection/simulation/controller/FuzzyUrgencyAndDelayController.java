@@ -5,6 +5,7 @@ import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
+import master.work.intersection.simulation.main.Timer;
 import net.sourceforge.jFuzzyLogic.FIS;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.net.URL;
  */
 public class FuzzyUrgencyAndDelayController extends Controller{
 
+    private static final String NAME = "Fuzzy Urgency And Delay Controller";
     public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator.fcl";
     public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
 
@@ -26,6 +28,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
 
     public FuzzyUrgencyAndDelayController(Intersection intersection) {
         super(intersection);
+        name = NAME;
         try {
             urgencyEvaluator = new FuzzyUrgencyEvaluator(loadControlRule(URGENCY_CONTROL_RULES_PATH), intersection.getPhases().length);
             decisionMaker = new FuzzyDecisionMaker(loadControlRule(DELAY_CONTROL_RULES_PATH));
@@ -38,14 +41,23 @@ public class FuzzyUrgencyAndDelayController extends Controller{
 
     @Override
     protected void regulate() {
-        if(intersection.getCurrentPhase().greenWaitingTime() >= PHASE_TIME) {
+        if(intersection.getCurrentPhase().greenWaitingTime() >= intersection.getCurrentPhase().getPhaseTime()) {
+            //define next green phase
             this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());
+            //define delay for current green phase
             this.delay = decisionMaker.getTimeDelay(nextPhase.waitingVehicles(), intersection.getCurrentPhase().waitingVehicles());
+            //apply delay on current green phase
+            delayGreenPhase(delay);
+            statistics.update();
             intersection.switchOnSpecifiedPhase(nextPhase);
-            statistics.allPhasesStatistics();
         }
     }
 
+    private void delayGreenPhase(long delay){
+        long delayedPhaseTime = intersection.getCurrentPhase().getPhaseTime() + delay;
+        while(intersection.getCurrentPhase().greenWaitingTime() < delayedPhaseTime);
+
+    }
     private FIS loadControlRule(String fileName) throws FileNotFoundException {
         FIS fis = FIS.load(getPath(fileName), true);
 

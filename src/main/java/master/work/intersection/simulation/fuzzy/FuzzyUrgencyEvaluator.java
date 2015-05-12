@@ -33,11 +33,10 @@ public class FuzzyUrgencyEvaluator {
     public Phase nextGreenPhase(Phase[] redPhases) {
         for(Phase redPhase : redPhases){
             controlRules.setVariable(VEHICLES, redPhase.waitingVehicles());
-            controlRules.setVariable(DURATION, redPhase.redWaitingTime());
+            controlRules.setVariable(DURATION, redPhase.redWaitingTime() / 1000);
             controlRules.evaluate();
-            Variable urgency = controlRules.getVariable(URGENCY);
-            System.out.println("Urgency = " + urgency.getValue());
             redPhase.setUrgency(controlRules.getVariable(URGENCY).getValue());
+            print(redPhase);
             nextPhasesCandidates.add(redPhase);
         }
         Collections.sort(nextPhasesCandidates, new PhaseUrgencyComparator());
@@ -57,6 +56,13 @@ public class FuzzyUrgencyEvaluator {
         }
 
         throw new NextPhaseNotSelectedException();
+    }
+
+    private void print(Phase phase){
+        System.out.println("====== Phase: " + phase.getNumber() + "==========");
+        System.out.println("NumberVehiclesWaiting: " + phase.waitingVehicles());
+        System.out.println("TimeVehiclesWaiting: " + phase.redWaitingTime()/1000 + " sec.");
+        System.out.println("Urgency: " + phase.getUrgency());
     }
 
     class PhaseUrgencyComparator implements Comparator<Phase> {

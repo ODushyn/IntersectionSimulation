@@ -45,6 +45,4 @@
         </dependency>
     </dependencies>
 
-    <!-- TODO: add assembly plugin-->
-
 </project>

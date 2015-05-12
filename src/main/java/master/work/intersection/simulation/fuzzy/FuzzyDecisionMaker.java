@@ -29,6 +29,11 @@ public class FuzzyDecisionMaker {
 
         long delay = (long)(controlRules.getVariable(DELAY).getValue() * 1000);
 
+/*        System.out.println("============================================");
+        System.out.println("Vehicles of current green: " + waitingVehiclesOfCurrentGreenPhase);
+        System.out.println("Vehicles of current red: " + waitingVehiclesOfNextGreenPhase);
+        System.out.println("Delay: " + delay + " msec");
+        System.out.println("============================================");*/
         return delay;
     }
 

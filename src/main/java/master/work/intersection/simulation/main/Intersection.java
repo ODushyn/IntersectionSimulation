@@ -16,17 +16,16 @@ public abstract class Intersection {
 
     public Intersection(Distribution distribution, int phases, int directions){
         this.distribution = distribution;
-        initPhases(new Phase[phases]);
-        initDirections(new Direction[directions]);
-        init();
+        this.phases = new Phase[phases];
+        this.directions = new Direction[directions];
     }
 
     public void launchDirections(){
-        for(Phase p : phases){
-            for(Direction d: p.getDirections()){
-                d.start();
-            }
-        }
+        this.distribution.setTotalNumberOfArrivedVehicles(0);
+        createPhases();
+        createDirections();
+        init();
+        startDirections();
     }
 
     protected abstract void init();
@@ -39,14 +38,16 @@ public abstract class Intersection {
             this.currentPhase = getPhases()[currentPhase.getNumber() + 1];
         }
         this.currentPhase.activate();
-        System.out.println("Next phase: " + currentPhase.getNumber());
+/*        System.out.println("Next phase: " + currentPhase.getNumber());*/
     }
 
     public void switchOnSpecifiedPhase(Phase phase){
         this.currentPhase.deactivate();
         this.currentPhase = phase;
         this.currentPhase.activate();
-        System.out.println("Next phase: " + currentPhase.getNumber());
+/*        System.out.println("Next phase: " + currentPhase.getNumber());
+        System.out.println("NumberWaitingVehicles: " + currentPhase.waitingVehicles());
+        System.out.println("==================================================");*/
     }
 
     public Phase[] redPhases(){
@@ -60,20 +61,25 @@ public abstract class Intersection {
         }
         return redPhases;
     }
-    private void initPhases(Phase phases[]){
-        this.phases = phases;
+    private void createPhases(){
         for(int i=0; i < this.phases.length; i++){
             this.phases[i] = new Phase(i);
         }
     }
 
-    private void initDirections(Direction direction[]){
-        this.directions = direction;
+    private void createDirections(){
         for(int i=0; i < this.directions.length; i++){
             this.directions[i] = new Direction(i);
         }
     }
-    
+
+    private void startDirections(){
+        for(Phase p : phases){
+            for(Direction d: p.getDirections()){
+                d.start();
+            }
+        }
+    }
     public Direction getDirection(int number){
         return directions[number];
     }
