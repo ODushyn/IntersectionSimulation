@@ -1,7 +1,7 @@
 package master.work.intersection.simulation.intersec.util;
 
+import master.work.intersection.simulation.detector.util.Distribution;
 import master.work.intersection.simulation.main.Controller;
-import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.main.Timer;
 
 /**
@@ -9,51 +9,55 @@ import master.work.intersection.simulation.main.Timer;
  */
 public class Direction extends Thread{
 
+    private Distribution distribution;
     private double queue;
-    //TODO: make this parameter work (measure waiting time for each direction)
-    private int redWaitingTime;
-    //TODO: is this parameter needed?
     private boolean active;
     private long lastVehicleRemoveTime;
     private long lastDistributionTime;
 
-    public Direction(int name) {
-        queue = 0;
-        lastVehicleRemoveTime = Timer.currentTime();
-        lastDistributionTime = Timer.currentTime();
+    public Direction(int name, Distribution distribution) {
+        this.distribution = distribution;
+        this.queue = 0;
+        this.lastVehicleRemoveTime = Timer.currentTime();
+        this.lastDistributionTime = Timer.currentTime();
         setName(String.valueOf(name));
     }
 
     @Override
-    public void run() {
-        while(Controller.isOn()) {
-            simulateDistribution();
-            simulateVehicleMoveAway();
+    public void run(){
+        try {
+            while(Controller.isOn()) {
+                simulateDistribution();
+                simulateVehicleMoveAway();
+                this.sleep(Controller.UNIT_OF_TIME);
+            }
+        }catch (InterruptedException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void setArrivalRate(double rate){
+        this.distribution.setArrivalRate(rate);
     }
 
     private void simulateVehicleMoveAway(){
-        if(active && Timer.repeat(Timer.currentTime(), lastVehicleRemoveTime, Controller.UNIT_OF_TIME)) {
+        if(active) {
             removeVehicleFromQueue();
-
         }
-
     }
 
     private void simulateDistribution(){
-        if(Timer.repeat(Timer.currentTime(), lastDistributionTime, Controller.UNIT_OF_TIME)) {
-            addVehiclesToQueue();
-        }
+        addVehiclesToQueue();
     }
 
     private void addVehiclesToQueue(){
-        this.queue += Intersection.distribution.arrivedVehicles();
+        this.queue += distribution.arrivedVehicles();
         lastDistributionTime = Timer.currentTime();
     }
 
     private void removeVehicleFromQueue(){
         if(queue > 0){
-            this.queue -= Controller.VEHICLE_LEAVING_RATE;
+            this.queue -= Controller.DEFAULT_VEHICLE_LEAVING_RATE;
         }
         this.lastVehicleRemoveTime = Timer.currentTime();
     }
@@ -67,10 +71,6 @@ public class Direction extends Thread{
 
     public void setQueue(double queue) {
         this.queue = queue;
-    }
-
-    public int getRedWaitingTime() {
-        return redWaitingTime;
     }
 
     public void setActive(boolean isActive) {
