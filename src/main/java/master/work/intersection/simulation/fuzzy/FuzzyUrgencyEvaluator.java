@@ -3,7 +3,6 @@ package master.work.intersection.simulation.fuzzy;
 import master.work.intersection.simulation.exception.NextPhaseNotSelectedException;
 import master.work.intersection.simulation.intersec.util.Phase;
 import net.sourceforge.jFuzzyLogic.FIS;
-import net.sourceforge.jFuzzyLogic.rule.Variable;
 
 import java.util.*;
 
@@ -31,8 +30,9 @@ public class FuzzyUrgencyEvaluator {
      * @return number of next phase
      */
     public Phase nextGreenPhase(Phase[] redPhases) {
+
         for(Phase redPhase : redPhases){
-            controlRules.setVariable(VEHICLES, redPhase.waitingVehicles());
+            controlRules.setVariable(VEHICLES, redPhase.averageWaitingVehiclesAtDirection());
             controlRules.setVariable(DURATION, redPhase.redWaitingTime() / 1000);
             controlRules.evaluate();
             redPhase.setUrgency(controlRules.getVariable(URGENCY).getValue());
@@ -60,9 +60,10 @@ public class FuzzyUrgencyEvaluator {
 
     private void print(Phase phase){
         System.out.println("====== Phase: " + phase.getNumber() + "==========");
-        System.out.println("NumberVehiclesWaiting: " + phase.waitingVehicles());
+        System.out.println("NumberVehiclesWaiting: " + phase.totalWaitingVehicles());
         System.out.println("TimeVehiclesWaiting: " + phase.redWaitingTime()/1000 + " sec.");
         System.out.println("Urgency: " + phase.getUrgency());
+        System.out.println("================");
     }
 
     class PhaseUrgencyComparator implements Comparator<Phase> {

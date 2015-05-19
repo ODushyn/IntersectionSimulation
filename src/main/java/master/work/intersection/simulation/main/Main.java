@@ -16,19 +16,30 @@ public class Main {
         System.out.println("Hello World!");
 
         //TODO: consider what parameters should be passed into Intersection
-        Intersection intersection = new FourWayIntersection(new PoissonDistribute(), 4, 12);
+        Intersection intersection = new FourWayIntersection(4, 12);
 
-        Controller fuzzyController = new FuzzyUrgencyAndDelayController(intersection);
-        Controller pretimedController = new PretimedController(intersection);
+        List<Controller> controllers = new ArrayList<Controller>();
 
-        fuzzyController.launch();
-        pretimedController.launch();
+        controllers.add(new PretimedController(intersection));
+        //controllers.add(new FuzzyUrgencyAndDelayController(intersection));
 
-        //testDistribution();
+        for(Controller contr: controllers){
+            try {
+                contr.launch();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+/*        try {
+            testDistribution();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
     }
 
-    private static void  testDistribution(){
-        PoissonDistribution p = new PoissonDistribution(1);
+    private static void  testDistribution() throws InterruptedException {
+        PoissonDistribution p = new PoissonDistribution(0.13);
         for(int i=0; i<10; i++){
             System.out.println(p.probability(i));
         }
@@ -37,12 +48,14 @@ public class Main {
 
         long lastDistributionTime = Timer.currentTime();
         List<Integer> list = new ArrayList();
-        while(Controller.isOn()){
-            if(Timer.repeat(Timer.currentTime(), lastDistributionTime, Controller.UNIT_OF_TIME)) {
+        long start = Timer.currentTime();
+        long duration = 3600000;
+        while(Timer.currentTime() - start <  duration){
+
                 System.out.println(p.sample());
                 list.add(p.sample());
                 lastDistributionTime = Timer.currentTime();
-            }
+
         }
         int sum = 0;
         for(Integer sample : list){

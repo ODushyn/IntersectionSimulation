@@ -1,33 +1,30 @@
 package master.work.intersection.simulation.intersec.util;
 
-import master.work.intersection.simulation.detector.util.Distribution;
+import master.work.intersection.simulation.arrivalrate.ArrivalRate;
+import master.work.intersection.simulation.arrivalrate.FloatArrivalRate;
 import master.work.intersection.simulation.main.Controller;
-import master.work.intersection.simulation.main.Timer;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public class Direction extends Thread{
 
-    private Distribution distribution;
+    private ArrivalRate arrivalRate;
     private double queue;
     private boolean active;
-    private long lastVehicleRemoveTime;
-    private long lastDistributionTime;
 
-    public Direction(int name, Distribution distribution) {
-        this.distribution = distribution;
+    public Direction(int name) {
+        this.arrivalRate = new FloatArrivalRate();
         this.queue = 0;
-        this.lastVehicleRemoveTime = Timer.currentTime();
-        this.lastDistributionTime = Timer.currentTime();
         setName(String.valueOf(name));
     }
 
     @Override
     public void run(){
         try {
+            arrivalRate.control(this);
             while(Controller.isOn()) {
-                simulateDistribution();
+                simulateVehiclesComeIn();
                 simulateVehicleMoveAway();
                 this.sleep(Controller.UNIT_OF_TIME);
             }
@@ -36,8 +33,8 @@ public class Direction extends Thread{
         }
     }
 
-    public void setArrivalRate(double rate){
-        this.distribution.setArrivalRate(rate);
+    private void simulateVehiclesComeIn(){
+        this.queue += arrivalRate.arrivedVehicles();
     }
 
     private void simulateVehicleMoveAway(){
@@ -46,20 +43,10 @@ public class Direction extends Thread{
         }
     }
 
-    private void simulateDistribution(){
-        addVehiclesToQueue();
-    }
-
-    private void addVehiclesToQueue(){
-        this.queue += distribution.arrivedVehicles();
-        lastDistributionTime = Timer.currentTime();
-    }
-
     private void removeVehicleFromQueue(){
         if(queue > 0){
             this.queue -= Controller.DEFAULT_VEHICLE_LEAVING_RATE;
         }
-        this.lastVehicleRemoveTime = Timer.currentTime();
     }
 
     public double getQueue() {
@@ -69,6 +56,10 @@ public class Direction extends Thread{
         return Math.floor(queue);
     }
 
+    public double getArrivalRate() {
+        return arrivalRate.getArrivalRate();
+    }
+
     public void setQueue(double queue) {
         this.queue = queue;
     }
@@ -76,4 +67,9 @@ public class Direction extends Thread{
     public void setActive(boolean isActive) {
         this.active = isActive;
     }
+
+    public void setArrivalRate(ArrivalRate arrivalRate) {
+        this.arrivalRate = arrivalRate;
+    }
+
 }

@@ -16,11 +16,12 @@ public class PretimedController extends Controller {
     }
 
     @Override
-    protected void regulate() {
-        if(intersection.getCurrentPhase().greenWaitingTime() >= intersection.getCurrentPhase().getPhaseTime()) {
-            intersection.switchOnNextPhaseByDefault();
-            statistics.update();
-            //statistics.allPhasesStatistics();
-        }
+    protected void regulate() throws InterruptedException {
+        System.out.println(intersection.getCurrentPhase().getPhaseTime());
+        Thread.sleep(intersection.getCurrentPhase().getPhaseTime());
+        statistics.update();
+        intersection.switchOnNextPhaseByDefault();
+
+        //statistics.allPhasesStatistics();
     }
 }

@@ -2,7 +2,9 @@ package master.work.intersection.simulation.statistics;
 
 import master.work.intersection.simulation.intersec.util.Direction;
 import master.work.intersection.simulation.intersec.util.Phase;
+import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
+import master.work.intersection.simulation.main.Timer;
 
 /**
  * Created by Oleksander.Dushyn on 4/25/2015.
@@ -24,16 +26,21 @@ public class Statistics {
     public void update(){
         this.totalNumberOfPhases += 1;
         for(Phase phase : intersection.getPhases()){
-            totalWaitingVehiclesForPhase += phase.waitingVehicles();
+            totalWaitingVehiclesForPhase += phase.totalWaitingVehicles();
+            //outputPhaseInfo(phase);
         }
         this.totalVehiclesDelayForAllPhases += totalWaitingVehiclesForPhase;
-        print();
+        //print();
+        System.out.println("Total number of phases: " + totalNumberOfPhases);
+        System.out.println("Total time: " + (Timer.currentTime() - Controller.START_TIME)/1000);
+        System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
+        /*System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());*/
         totalWaitingVehiclesForPhase = 0;
     }
 
-    public double averageVehicleDelayRatio(){
-        return (double) totalVehiclesDelayForAllPhases /intersection.distribution.getTotalNumberOfArrivedVehicles();
-    }
+   /* public double averageVehicleDelayRatio(){
+        return averageVehicleDelay() /intersection.getDistribution().getTotalNumberOfArrivedVehicles();
+    }*/
 
     public double averageVehicleDelay(){
         return (double) totalVehiclesDelayForAllPhases /totalNumberOfPhases;
@@ -45,8 +52,8 @@ public class Statistics {
         System.out.println("Total waiting vehicles for all phases:" + totalVehiclesDelayForAllPhases);
         System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
         System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());
-        System.out.println("Average delay ratio: " + averageVehicleDelayRatio());
-        System.out.println("Total arrived vehicles: " + intersection.distribution.getTotalNumberOfArrivedVehicles());
+        //System.out.println("Average delay ratio: " + averageVehicleDelayRatio());
+        //System.out.println("Total arrived vehicles: " + intersection.getDistribution().getTotalNumberOfArrivedVehicles());
         System.out.println("============================================");
     }
 
@@ -54,13 +61,13 @@ public class Statistics {
     private double vehiclesDelayInRedPhases(){
         double total = 0;
         for(Phase phase : intersection.redPhases()){
-            total += phase.waitingVehicles();
+            total += phase.totalWaitingVehicles();
         }
         return total;
     }
 
     private double vehiclesDelayInGreenPhase(){
-        return intersection.getCurrentPhase().waitingVehicles();
+        return intersection.getCurrentPhase().totalWaitingVehicles();
     }
 
     public void activePhaseStatistics(){
@@ -86,13 +93,12 @@ public class Statistics {
         System.out.print(" ");
         System.out.print("Green time: " + phase.greenWaitingTime());
         System.out.print(" ");
-        System.out.println("Vehicles:" + phase.waitingVehicles());
+        System.out.println("Vehicles:" + phase.totalWaitingVehicles());
         for(Direction direction : phase.getDirections()){
             System.out.print("Direction: " + direction.getName());
             System.out.print(" ");
             System.out.print("Vehicles: " + direction.getQueue());
-            System.out.print(" ");
-            System.out.println("Waiting time:" + direction.getRedWaitingTime());
+            System.out.println("");
         }
         System.out.println();
     }

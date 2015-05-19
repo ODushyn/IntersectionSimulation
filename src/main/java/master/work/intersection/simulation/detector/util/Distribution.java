@@ -1,5 +1,8 @@
 package master.work.intersection.simulation.detector.util;
 
+import master.work.intersection.simulation.main.Controller;
+import master.work.intersection.simulation.util.Constants;
+
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
@@ -7,7 +10,9 @@ public abstract class Distribution {
 
     private int totalNumberOfArrivedVehicles = 0;
 
-    protected abstract int numberOfArrivedVehicles();
+    public abstract void setArrivalRate(double rate);
+
+    public abstract double getArrivalRate();
 
     public int arrivedVehicles(){
         int vehicles = numberOfArrivedVehicles();
@@ -15,11 +20,10 @@ public abstract class Distribution {
         return vehicles;
     }
 
+    protected abstract int numberOfArrivedVehicles();
+
     public int getTotalNumberOfArrivedVehicles() {
         return totalNumberOfArrivedVehicles;
     }
 
-    public void setTotalNumberOfArrivedVehicles(int totalNumberOfArrivedVehicles) {
-        this.totalNumberOfArrivedVehicles = totalNumberOfArrivedVehicles;
-    }
 }

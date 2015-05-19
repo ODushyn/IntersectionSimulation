@@ -7,14 +7,6 @@ import java.util.Calendar;
  */
 public class Timer {
 
-    public synchronized static boolean repeat(long finishTime, long duration){
-        return currentTime() - finishTime > duration;
-    }
-
-    public synchronized static boolean repeat(long finishTime, long startTime, long duration){
-        return finishTime - startTime > duration;
-    }
-
     public synchronized static long currentTime(){
         return Calendar.getInstance().getTime().getTime();
     }

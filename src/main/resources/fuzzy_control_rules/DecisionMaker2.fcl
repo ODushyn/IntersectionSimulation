@@ -1,0 +1,76 @@
+FUNCTION_BLOCK traffic
+
+VAR_INPUT
+	green_vehicles : REAL; // green_vehicles number of current green light phase - Qg
+	red_vehicles : REAL; // red_vehicles number of red light phase which has big traffic delay - Qr
+END_VAR
+
+VAR_OUTPUT
+	delay : REAL; // delay time of current green light phase - Gr
+END_VAR
+
+FUZZIFY green_vehicles	// Fuzzify input variable 'green_vehicles': {Very Short, Short, Medium, Long, Very Long}
+	TERM very_short := (0, 1) (3, 1) (6, 0) ;
+	TERM short := (3, 0) (9, 1) (15, 0);
+	TERM medium := (9, 0) (15, 1) (21, 0);
+	TERM long := (15, 0) (21, 1) (27, 0);
+	TERM very_long := (21, 0) (27, 1) (30, 1);
+END_FUZZIFY
+
+FUZZIFY red_vehicles	// Fuzzify input variable 'red_vehicles': {Very Short, Short, Medium, Long, Very Long}
+	TERM very_short := (0, 1) (3, 1) (6, 0) ;
+	TERM short := (3, 0) (9, 1) (15, 0);
+	TERM medium := (9, 0) (15, 1) (21, 0);
+	TERM long := (15, 0) (21, 1) (27, 0);
+	TERM very_long := (21, 0) (27, 1) (30, 1);
+END_FUZZIFY
+
+DEFUZZIFY delay			// Defuzzify output variable 'delay' : {Very Short,Short, Medium, Long, Very Long}
+	TERM very_short := (0, 1) (3, 1) (6, 0) ;
+	TERM short := (3, 0) (9, 1) (15, 0);
+	TERM medium := (9, 0) (15, 1) (21, 0);
+	TERM long := (15, 0) (21, 1) (27, 0);
+	TERM very_long := (21, 0) (27, 1) (30, 1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method
+	ACCU : MAX;			// Use 'max' accumulation method
+
+	RULE 1 :  IF green_vehicles IS very_short 	AND red_vehicles IS very_short 		THEN delay IS very_short;
+	RULE 2 :  IF green_vehicles IS very_short 	AND red_vehicles IS short 			THEN delay IS very_short;
+	RULE 3 :  IF green_vehicles IS very_short 	AND red_vehicles IS medium 			THEN delay IS very_short;
+	RULE 4 :  IF green_vehicles IS very_short 	AND red_vehicles IS long 			THEN delay IS very_short;
+	RULE 5 :  IF green_vehicles IS very_short 	AND red_vehicles IS very_long 		THEN delay IS very_short;
+
+	RULE 6 :  IF green_vehicles IS short 		AND red_vehicles IS very_short 		THEN delay IS short;
+	RULE 7 :  IF green_vehicles IS short 		AND red_vehicles IS short 			THEN delay IS short;
+	RULE 8 :  IF green_vehicles IS short 		AND red_vehicles IS medium 			THEN delay IS short;
+	RULE 9 :  IF green_vehicles IS short 		AND red_vehicles IS long 			THEN delay IS very_short;
+	RULE 10 : IF green_vehicles IS short 		AND red_vehicles IS very_long 		THEN delay IS very_short;
+
+	RULE 11 :  IF green_vehicles IS medium 		AND red_vehicles IS very_short 		THEN delay IS medium;
+	RULE 12 :  IF green_vehicles IS medium 		AND red_vehicles IS short 			THEN delay IS medium;
+	RULE 13 :  IF green_vehicles IS medium 		AND red_vehicles IS medium 			THEN delay IS medium;
+	RULE 14 :  IF green_vehicles IS medium 		AND red_vehicles IS long 			THEN delay IS medium;
+	RULE 15 :  IF green_vehicles IS medium 		AND red_vehicles IS very_long 		THEN delay IS short;
+
+	RULE 16 :  IF green_vehicles IS long 		AND red_vehicles IS very_short 		THEN delay IS long;
+	RULE 17 :  IF green_vehicles IS long 		AND red_vehicles IS short 			THEN delay IS long;
+	RULE 18 :  IF green_vehicles IS long 		AND red_vehicles IS medium 			THEN delay IS long;
+	RULE 19 :  IF green_vehicles IS long 		AND red_vehicles IS long 			THEN delay IS medium;
+	RULE 20 :  IF green_vehicles IS long 		AND red_vehicles IS very_long 		THEN delay IS medium;
+
+	RULE 21 :  IF green_vehicles IS very_long	AND red_vehicles IS very_short 		THEN delay IS very_long;
+	RULE 22 :  IF green_vehicles IS very_long 	AND red_vehicles IS short 			THEN delay IS very_long;
+	RULE 23 :  IF green_vehicles IS very_long 	AND red_vehicles IS medium 			THEN delay IS long;
+	RULE 24 :  IF green_vehicles IS very_long 	AND red_vehicles IS long 			THEN delay IS long;
+	RULE 25 :  IF green_vehicles IS very_long 	AND red_vehicles IS very_long 		THEN delay IS long;
+
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

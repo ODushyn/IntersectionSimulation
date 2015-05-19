@@ -2,6 +2,7 @@ package master.work.intersection.simulation.intersec.util;
 
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Timer;
+import master.work.intersection.simulation.util.Constants;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
@@ -18,7 +19,7 @@ public class Phase {
     public Phase(int number) {
         this.number = number;
         this.redStartTime = Timer.currentTime();
-        this.phaseTime = Controller.PHASE_TIME;
+        this.phaseTime = Constants.DEFAULT_PHASE_TIME;
     }
 
     public long redWaitingTime(){
@@ -35,12 +36,20 @@ public class Phase {
         return Timer.currentTime() - greenStartTime;
     }
 
-    public int waitingVehicles(){
+    public int totalWaitingVehicles(){
         int vehiclesTotal = 0;
         for(Direction d : directions){
             vehiclesTotal += d.getQueue();
         }
         return vehiclesTotal;
+    }
+
+    /**
+     *
+     * @return average number of waiting vehicles at one direction
+     */
+    public double averageWaitingVehiclesAtDirection(){
+        return totalWaitingVehicles()/directions.length;
     }
 
     public void deactivate(){
@@ -49,9 +58,6 @@ public class Phase {
         deactivateDirections();
     }
 
-    public void delay(long time){
-        this.phaseTime += time;
-    }
     public void activate(){
         this.redStartTime = 0;
         this.greenStartTime = Timer.currentTime();

@@ -8,10 +8,24 @@ import java.util.Random;
 public class RandomDistribute extends Distribution{
 
     private Random rand = new Random();
-    private static int VEHICLES = 2;
+    private double VEHICLES = 2;
+
+    public RandomDistribute(double arrivalRate) {
+        this.VEHICLES = arrivalRate;
+    }
 
     @Override
     protected int numberOfArrivedVehicles() {
-        return rand.nextInt(VEHICLES);
+        return rand.nextInt((int)VEHICLES);
+    }
+
+    @Override
+    public void setArrivalRate(double rate) {
+        this.VEHICLES = rate;
+    }
+
+    @Override
+    public double getArrivalRate() {
+        return VEHICLES;
     }
 }

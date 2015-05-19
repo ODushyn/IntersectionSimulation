@@ -1,30 +1,28 @@
 package master.work.intersection.simulation.main;
 
 import master.work.intersection.simulation.detector.util.Distribution;
+import master.work.intersection.simulation.detector.util.PoissonDistribute;
 import master.work.intersection.simulation.intersec.util.Direction;
 import master.work.intersection.simulation.intersec.util.Phase;
+import master.work.intersection.simulation.arrivalrate.ArrivalRate;
+import master.work.intersection.simulation.util.Constants;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public abstract class Intersection {
 
-    public static Distribution distribution;
     private Direction directions[];
-    private Phase phases[];
+    protected Phase phases[];
     protected Phase currentPhase;
 
-    public Intersection(Distribution distribution, int phases, int directions){
-        this.distribution = distribution;
+    public Intersection(int phases, int directions){
         this.phases = new Phase[phases];
         this.directions = new Direction[directions];
+        applyDefaultSetting();
     }
 
     public void launchDirections(){
-        this.distribution.setTotalNumberOfArrivedVehicles(0);
-        createPhases();
-        createDirections();
-        init();
         startDirections();
     }
 
@@ -45,8 +43,8 @@ public abstract class Intersection {
         this.currentPhase.deactivate();
         this.currentPhase = phase;
         this.currentPhase.activate();
-/*        System.out.println("Next phase: " + currentPhase.getNumber());
-        System.out.println("NumberWaitingVehicles: " + currentPhase.waitingVehicles());
+/*      System.out.println("Next phase: " + currentPhase.getNumber());
+        System.out.println("NumberWaitingVehicles: " + currentPhase.totalWaitingVehicles());
         System.out.println("==================================================");*/
     }
 
@@ -61,7 +59,8 @@ public abstract class Intersection {
         }
         return redPhases;
     }
-    private void createPhases(){
+
+    protected void createPhases(){
         for(int i=0; i < this.phases.length; i++){
             this.phases[i] = new Phase(i);
         }
@@ -71,6 +70,12 @@ public abstract class Intersection {
         for(int i=0; i < this.directions.length; i++){
             this.directions[i] = new Direction(i);
         }
+    }
+
+    public void applyDefaultSetting(){
+        createPhases();
+        createDirections();
+        init();
     }
 
     private void startDirections(){
