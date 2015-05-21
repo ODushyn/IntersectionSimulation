@@ -32,11 +32,11 @@ public class FloatArrivalRate extends ArrivalRate {
     }
 
     @Override
-    public void run(){
+    public synchronized void run(){
         while(Controller.isOn()) {
             try {
                 updateArrivalRate();
-                this.sleep(intervalChangeTime);
+                this.wait(intervalChangeTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -52,6 +52,13 @@ public class FloatArrivalRate extends ArrivalRate {
     public FloatArrivalRate lowTrafficRate(){
         this.bottomArrivalRate = Constants.DEFAULT_LOW_TRAFFIC_BOTTOM_AR;
         this.topArrivalRate = Constants.DEFAULT_LOW_TRAFFIC_TOP_AR;
+        this.intervalChangeTime = Constants.DEFAULT_ARRIVALRATE_CHANGE_TIME;
+        return this;
+    }
+
+    public FloatArrivalRate middleTrafficRate(){
+        this.bottomArrivalRate = Constants.DEFAULT_MID_TRAFFIC_BOTTOM_AR;
+        this.topArrivalRate = Constants.DEFAULT_MID_TRAFFIC_TOP_AR;
         this.intervalChangeTime = Constants.DEFAULT_ARRIVALRATE_CHANGE_TIME;
         return this;
     }

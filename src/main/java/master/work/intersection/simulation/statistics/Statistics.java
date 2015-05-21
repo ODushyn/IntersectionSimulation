@@ -6,18 +6,32 @@ import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.main.Timer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 /**
  * Created by Oleksander.Dushyn on 4/25/2015.
  */
 public class Statistics {
 
     private Intersection intersection;
+    private List<Parameters> params;
+    private String name;
+    private long startTime;
     private int totalWaitingVehiclesForPhase;
     private int totalNumberOfPhases;
     private int totalVehiclesDelayForAllPhases;
 
-    public Statistics(Intersection intersection) {
-        this.intersection = intersection;
+    public Statistics(Controller controller) {
+        this.intersection = controller.getIntersection();
+        this.startTime = controller.getStartTime();
+        this.name = controller.getName();
+        this.params = new ArrayList<Parameters>();
         this.totalWaitingVehiclesForPhase = 0;
         this.totalNumberOfPhases = 0;
         this.totalVehiclesDelayForAllPhases = 0;
@@ -27,26 +41,18 @@ public class Statistics {
         this.totalNumberOfPhases += 1;
         for(Phase phase : intersection.getPhases()){
             totalWaitingVehiclesForPhase += phase.totalWaitingVehicles();
-            //outputPhaseInfo(phase);
         }
         this.totalVehiclesDelayForAllPhases += totalWaitingVehiclesForPhase;
-        //print();
-        System.out.println("Total number of phases: " + totalNumberOfPhases);
-        System.out.println("Total time: " + (Timer.currentTime() - Controller.START_TIME)/1000);
-        System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
-        /*System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());*/
-        totalWaitingVehiclesForPhase = 0;
+        params.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases));
+        this.totalWaitingVehiclesForPhase = 0;
+        //print2();
     }
-
-   /* public double averageVehicleDelayRatio(){
-        return averageVehicleDelay() /intersection.getDistribution().getTotalNumberOfArrivedVehicles();
-    }*/
 
     public double averageVehicleDelay(){
         return (double) totalVehiclesDelayForAllPhases /totalNumberOfPhases;
     }
 
-    public void print(){
+    public void print1(){
         System.out.println("==============STATISCTICS===================");
         System.out.println("Total number of phases: " + totalNumberOfPhases);
         System.out.println("Total waiting vehicles for all phases:" + totalVehiclesDelayForAllPhases);
@@ -57,6 +63,12 @@ public class Statistics {
         System.out.println("============================================");
     }
 
+    public void print2(){
+        /*System.out.println("Total number of phases: " + totalNumberOfPhases);
+        System.out.println("Total time: " + (Timer.currentTime() - Controller.START_TIME)/1000);
+        System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
+        System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());*/
+    }
 
     private double vehiclesDelayInRedPhases(){
         double total = 0;
@@ -102,4 +114,38 @@ public class Statistics {
         }
         System.out.println();
     }
+
+    public void  saveToFile(){
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new File(name + " " + Calendar.getInstance().getTime().getTime()/100000 +  ".txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        for (Parameters p : params) {
+            pw.println(p);
+        }
+        pw.close();
+    }
+
+    class Parameters{
+        long time;
+        int vehicles;
+        int phase;
+        int averageVehicles;
+
+        public Parameters(long time, int vehicles, int phase) {
+            this.time = time/60000;
+            this.vehicles = vehicles;
+            this.phase = phase;
+            this.averageVehicles = vehicles/phase;
+        }
+
+        public String toString() {
+            return phase + "\t" + vehicles + "\t"
+                    + time + "\t" + averageVehicles;
+        }
+    }
+
 }
+

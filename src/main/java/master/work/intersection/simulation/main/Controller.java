@@ -1,19 +1,23 @@
 package master.work.intersection.simulation.main;
 
+import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.statistics.Statistics;
+import master.work.intersection.simulation.util.Constants;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
  */
 public abstract class Controller {
 
-    public static long START_TIME;
+    private static long startTime;
+    //TODO: move values to constants
+    private static long simulationDurationTime = Constants.SIMULATION_DURATION_TIME;
     protected String name;
 
     public static final int UNIT_OF_TIME = 1000;
 
     // General constants
-    public static int SIMULATION_DURATION_TIME = 1800000;
+
 
     // Direction distribution constants
     public static double DEFAULT_VEHICLE_ARRIVAL_RATE = 0.3;
@@ -26,31 +30,48 @@ public abstract class Controller {
         //TODO: check initialization to make controller launch after finishing again
         // without creating new controller.
         this.intersection = intersection;
-        this.statistics = new Statistics(intersection);
     }
 
     public void launch() throws InterruptedException{
             System.out.println(name);
-            START_TIME = Timer.currentTime();
+            statistics = new Statistics(this);
+            startTime = Timer.currentTime();
             intersection.launchDirections();
             while(isOn()){
                     regulate();
             }
             intersection.applyDefaultSetting();
-            statistics.print();
+            statistics.print1();
+            statistics.saveToFile();
     }
 
     protected abstract void regulate() throws InterruptedException;
-    //TODO: place to timer
+
     public static boolean isOn(){
-        return (Timer.currentTime() - START_TIME) < SIMULATION_DURATION_TIME;
+        return (Timer.currentTime() - startTime) < simulationDurationTime;
     }
 
     public String getName() {
         return name;
     }
 
-    public static long getStartTime() {
-        return START_TIME;
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public Intersection getIntersection() {
+        return intersection;
+    }
+
+    public void setIntersection(Intersection intersection) {
+        this.intersection = intersection;
+    }
+
+    public long getSimulationDurationTime() {
+        return simulationDurationTime;
+    }
+
+    public void setSimulationDurationTime(int simulationDurationTime) {
+        this.simulationDurationTime = simulationDurationTime;
     }
 }

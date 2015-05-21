@@ -19,7 +19,9 @@ public abstract class Intersection {
     public Intersection(int phases, int directions){
         this.phases = new Phase[phases];
         this.directions = new Direction[directions];
-        applyDefaultSetting();
+        createPhases();
+        createDirections();
+        init();
     }
 
     public void launchDirections(){
@@ -72,12 +74,6 @@ public abstract class Intersection {
         }
     }
 
-    public void applyDefaultSetting(){
-        createPhases();
-        createDirections();
-        init();
-    }
-
     private void startDirections(){
         for(Phase p : phases){
             for(Direction d: p.getDirections()){
@@ -85,6 +81,28 @@ public abstract class Intersection {
             }
         }
     }
+
+    public void applyDefaultSetting(){
+        finishAllThreads();
+        createPhases();
+        createDirections();
+        init();
+    }
+
+    public void finishAllThreads(){
+        for(Phase p : phases) {
+            Direction directions[] = p.getDirections();
+            for(Direction d : directions) {
+                synchronized(d) {
+                    d.notify();
+                }
+                synchronized(d.getArrivalRateObj()) {
+                    d.getArrivalRateObj().notify();
+                }
+            }
+        }
+    }
+
     public Direction getDirection(int number){
         return directions[number];
     }

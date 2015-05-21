@@ -27,7 +27,6 @@ public class ArrivalRate extends Thread{
     }
 
     protected void updateArrivalRate(double rate){
-        System.out.println("Arrival rate of " + direction.getName() + " is updated to: " + rate);
         this.distribution.setArrivalRate(rate);
     }
 

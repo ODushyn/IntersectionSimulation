@@ -20,13 +20,13 @@ public class Direction extends Thread{
     }
 
     @Override
-    public void run(){
+    public synchronized void run(){
         try {
             arrivalRate.control(this);
             while(Controller.isOn()) {
                 simulateVehiclesComeIn();
                 simulateVehicleMoveAway();
-                this.sleep(Controller.UNIT_OF_TIME);
+                this.wait(Controller.UNIT_OF_TIME);
             }
         }catch (InterruptedException e) {
             e.printStackTrace();
@@ -70,6 +70,10 @@ public class Direction extends Thread{
 
     public void setArrivalRate(ArrivalRate arrivalRate) {
         this.arrivalRate = arrivalRate;
+    }
+
+    public ArrivalRate getArrivalRateObj() {
+        return arrivalRate;
     }
 
 }

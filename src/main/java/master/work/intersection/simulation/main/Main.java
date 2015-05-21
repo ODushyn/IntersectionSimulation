@@ -4,10 +4,14 @@ import master.work.intersection.simulation.controller.FuzzyUrgencyAndDelayContro
 import master.work.intersection.simulation.controller.PretimedController;
 import master.work.intersection.simulation.detector.util.PoissonDistribute;
 import master.work.intersection.simulation.intersec.FourWayIntersection;
+import master.work.intersection.simulation.intersec.test.HighTrafficIntersection;
+import master.work.intersection.simulation.intersec.test.LowTrafficIntersection;
+import master.work.intersection.simulation.intersec.test.MiddleTrafficIntersection;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Main {
 
@@ -16,12 +20,18 @@ public class Main {
         System.out.println("Hello World!");
 
         //TODO: consider what parameters should be passed into Intersection
-        Intersection intersection = new FourWayIntersection(4, 12);
+        //Intersection intersection = new FourWayIntersection(4, 12);
 
         List<Controller> controllers = new ArrayList<Controller>();
 
-        controllers.add(new PretimedController(intersection));
-        //controllers.add(new FuzzyUrgencyAndDelayController(intersection));
+        /*controllers.add(new PretimedController(new LowTrafficIntersection(4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(4, 12)));*/
+
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(4, 12)));
+
+        /*controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(4, 12)));*/
 
         for(Controller contr: controllers){
             try {

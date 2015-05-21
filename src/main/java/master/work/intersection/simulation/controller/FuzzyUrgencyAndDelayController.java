@@ -5,6 +5,7 @@ import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
+import master.work.intersection.simulation.statistics.Statistics;
 import net.sourceforge.jFuzzyLogic.FIS;
 
 import java.io.File;
@@ -36,6 +37,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 
