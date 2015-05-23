@@ -17,8 +17,8 @@ public class PretimedController extends Controller {
     }
 
     @Override
-    protected void regulate() throws InterruptedException {
-        Thread.sleep(intersection.getCurrentPhase().getPhaseTime());
+    protected synchronized void regulate() throws InterruptedException {
+        this.wait(intersection.getCurrentPhase().getPhaseTime());
         statistics.update();
         intersection.switchOnNextPhaseByDefault();
         //statistics.allPhasesStatistics();

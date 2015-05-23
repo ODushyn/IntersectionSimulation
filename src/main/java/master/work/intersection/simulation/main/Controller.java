@@ -34,18 +34,19 @@ public abstract class Controller {
 
     public void launch() throws InterruptedException{
             System.out.println(name);
-            statistics = new Statistics(this);
             startTime = Timer.currentTime();
+            statistics = new Statistics(this);
             intersection.launchDirections();
             while(isOn()){
                     regulate();
             }
-            intersection.applyDefaultSetting();
             statistics.print1();
             statistics.saveToFile();
+            intersection.applyDefaultSetting();
+
     }
 
-    protected abstract void regulate() throws InterruptedException;
+    protected  abstract void regulate() throws InterruptedException;
 
     public static boolean isOn(){
         return (Timer.currentTime() - startTime) < simulationDurationTime;

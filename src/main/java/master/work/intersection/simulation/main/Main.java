@@ -24,14 +24,14 @@ public class Main {
 
         List<Controller> controllers = new ArrayList<Controller>();
 
-        /*controllers.add(new PretimedController(new LowTrafficIntersection(4, 12)));
-        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(4, 12)));*/
+        //controllers.add(new PretimedController(new LowTrafficIntersection(4, 12)));
+        //controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(4, 12)));
 
-        controllers.add(new PretimedController(new MiddleTrafficIntersection(4, 12)));
-        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(4, 12)));
+        //controllers.add(new PretimedController(new MiddleTrafficIntersection(4, 12)));
+        //controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(4, 12)));
 
-        /*controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
-        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(4, 12)));*/
+        controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
+        //controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(4, 12)));
 
         for(Controller contr: controllers){
             try {

@@ -3,6 +3,7 @@ package master.work.intersection.simulation.intersec.util;
 import master.work.intersection.simulation.arrivalrate.ArrivalRate;
 import master.work.intersection.simulation.arrivalrate.FloatArrivalRate;
 import master.work.intersection.simulation.main.Controller;
+import master.work.intersection.simulation.util.Constants;
 
 /**
  * Created by Oleksander.Dushyn on 4/21/2015.
@@ -45,7 +46,7 @@ public class Direction extends Thread{
 
     private void removeVehicleFromQueue(){
         if(queue > 0){
-            this.queue -= Controller.DEFAULT_VEHICLE_LEAVING_RATE;
+            this.queue -= Constants.DEFAULT_VEHICLE_LEAVING_RATE;
         }
     }
 

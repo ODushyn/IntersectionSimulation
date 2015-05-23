@@ -8,8 +8,11 @@ import java.util.Properties;
  */
 public class Constants {
 
-    public static final long DEFAULT_PHASE_TIME = 20000;
+    public static final long SIMULATION_DURATION_TIME = 1800000;
+
+    public static final long DEFAULT_PHASE_TIME = 13000;
     public static final double DEFAULT_TRAFFIC_AR = 0.1;
+    public static final double DEFAULT_VEHICLE_LEAVING_RATE = 0.5;
 
     public static final double DEFAULT_LOW_TRAFFIC_BOTTOM_AR = 0.07000;
     public static final double DEFAULT_LOW_TRAFFIC_TOP_AR = 0.09000;
@@ -20,5 +23,5 @@ public class Constants {
     public static final double DEFAULT_HIGH_TRAFFIC_BOTTOM_AR = 0.11;
     public static final double DEFAULT_HIGH_TRAFFIC_TOP_AR = 0.13;
 
-    public static final long DEFAULT_ARRIVALRATE_CHANGE_TIME = 300000;
+    public static final long DEFAULT_ARRIVALRATE_CHANGE_TIME = 45000;
 }

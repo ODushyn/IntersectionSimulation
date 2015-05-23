@@ -20,7 +20,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     private static final String NAME = "Fuzzy Urgency And Delay Controller";
     public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator2.fcl";
     public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker2.fcl";
-    private static long DEFAULT_PHASE_TIME = 10000;
+    private static long DEFAULT_PHASE_TIME = 5000;
 
     private FuzzyDecisionMaker decisionMaker;
     private FuzzyUrgencyEvaluator urgencyEvaluator;
@@ -43,16 +43,23 @@ public class FuzzyUrgencyAndDelayController extends Controller{
 
 
     @Override
-    protected void regulate() throws InterruptedException {
-        Thread.sleep(intersection.getCurrentPhase().getPhaseTime());
-        //System.out.println("Default phase duration: " + intersection.getCurrentPhase().getPhaseTime());
-        //define next green phase
+    protected synchronized void regulate() throws InterruptedException {
+        this.wait(intersection.getCurrentPhase().getPhaseTime());
         this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());
-        //define delay for current green phase
+        Phase curPhase = intersection.getCurrentPhase();
+        System.out.println("====== Phase: " + curPhase.getNumber() + "==========");
+        System.out.println("NumberVehiclesWaiting: " + curPhase.totalWaitingVehicles());
+        System.out.println("TimeVehiclesWaiting: " + curPhase.redWaitingTime()/1000 + " sec.");
+        System.out.println("Urgency: " + curPhase.getUrgency());
+        System.out.println("================");
         this.delay = decisionMaker.getTimeDelay(nextPhase.averageWaitingVehiclesAtDirection(), intersection.getCurrentPhase().averageWaitingVehiclesAtDirection());
         System.out.println("Delay: " + delay);
-        //apply delay on current green phase
-        Thread.sleep(delay);
+        this.wait(delay);
+        System.out.println("====== Phase After Delay: " + curPhase.getNumber() + "==========");
+        System.out.println("NumberVehiclesWaiting: " + curPhase.totalWaitingVehicles());
+        System.out.println("TimeVehiclesWaiting: " + curPhase.redWaitingTime()/1000 + " sec.");
+        System.out.println("Urgency: " + curPhase.getUrgency());
+        System.out.println("================");
         statistics.update();
         intersection.switchOnSpecifiedPhase(nextPhase);
     }

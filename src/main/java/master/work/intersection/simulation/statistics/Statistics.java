@@ -8,7 +8,6 @@ import master.work.intersection.simulation.main.Timer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,9 +42,10 @@ public class Statistics {
             totalWaitingVehiclesForPhase += phase.totalWaitingVehicles();
         }
         this.totalVehiclesDelayForAllPhases += totalWaitingVehiclesForPhase;
-        params.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases));
+        params.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases, averageVehicleDelay()));
+        print2();
         this.totalWaitingVehiclesForPhase = 0;
-        //print2();
+
     }
 
     public double averageVehicleDelay(){
@@ -60,14 +60,15 @@ public class Statistics {
         System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());
         //System.out.println("Average delay ratio: " + averageVehicleDelayRatio());
         //System.out.println("Total arrived vehicles: " + intersection.getDistribution().getTotalNumberOfArrivedVehicles());
-        System.out.println("============================================");
+        System.out.println("========================================================================================");
     }
 
     public void print2(){
-        /*System.out.println("Total number of phases: " + totalNumberOfPhases);
-        System.out.println("Total time: " + (Timer.currentTime() - Controller.START_TIME)/1000);
+        System.out.println("Total number of phases: " + totalNumberOfPhases);
+        System.out.println("Total time: " + (Timer.currentTime() - startTime)/1000);
         System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
-        System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());*/
+        System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());
+        System.out.println("========================================================================================");
     }
 
     private double vehiclesDelayInRedPhases(){
@@ -118,13 +119,16 @@ public class Statistics {
     public void  saveToFile(){
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new File(name + " " + Calendar.getInstance().getTime().getTime()/100000 +  ".txt"));
+            pw = new PrintWriter(new File(name + " " + Calendar.getInstance().getTime().getTime()/1000000 +  ".txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         for (Parameters p : params) {
             pw.println(p);
         }
+        pw.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
+        pw.println("Start time: " + startTime);
+        pw.println("Current time: " + Timer.currentTime());
         pw.close();
     }
 
@@ -132,18 +136,18 @@ public class Statistics {
         long time;
         int vehicles;
         int phase;
-        int averageVehicles;
+        double averageVehiclesDelay;
 
-        public Parameters(long time, int vehicles, int phase) {
+        public Parameters(long time, int vehicles, int phase, double averageVehicleDelay) {
             this.time = time/60000;
             this.vehicles = vehicles;
             this.phase = phase;
-            this.averageVehicles = vehicles/phase;
+            this.averageVehiclesDelay = averageVehicleDelay;
         }
 
         public String toString() {
             return phase + "\t" + vehicles + "\t"
-                    + time + "\t" + averageVehicles;
+                    + time + "\t" + averageVehiclesDelay;
         }
     }
 
