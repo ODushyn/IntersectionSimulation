@@ -1,8 +1,5 @@
 package master.work.intersection.simulation.detector.util;
 
-import master.work.intersection.simulation.main.Controller;
-import master.work.intersection.simulation.statistics.Statistics;
-import master.work.intersection.simulation.util.Constants;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
 /**

@@ -5,7 +5,6 @@ import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
-import master.work.intersection.simulation.statistics.Statistics;
 import net.sourceforge.jFuzzyLogic.FIS;
 
 import java.io.File;
@@ -17,10 +16,10 @@ import java.net.URL;
  */
 public class FuzzyUrgencyAndDelayController extends Controller{
 
-    private static final String NAME = "Fuzzy Urgency And Delay Controller";
+    private static final String NAME = "Fuzzy Urgency And Delay";
     public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator2.fcl";
     public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker2.fcl";
-    private static long DEFAULT_PHASE_TIME = 5000;
+    private static long DEFAULT_PHASE_TIME = 10000;
 
     private FuzzyDecisionMaker decisionMaker;
     private FuzzyUrgencyEvaluator urgencyEvaluator;
@@ -29,8 +28,6 @@ public class FuzzyUrgencyAndDelayController extends Controller{
 
     public FuzzyUrgencyAndDelayController(Intersection intersection) {
         super(intersection);
-        changeDefaultPhaseTime();
-        name = NAME;
         try {
             urgencyEvaluator = new FuzzyUrgencyEvaluator(loadControlRule(URGENCY_CONTROL_RULES_PATH), intersection.getPhases().length);
             decisionMaker = new FuzzyDecisionMaker(loadControlRule(DELAY_CONTROL_RULES_PATH));
@@ -40,7 +37,13 @@ public class FuzzyUrgencyAndDelayController extends Controller{
 
     }
 
-
+    @Override
+    protected void specificSettings() {
+        name = NAME;
+        for(Phase p : intersection.getPhases()){
+            p.setPhaseTime(DEFAULT_PHASE_TIME);
+        }
+    }
 
     @Override
     protected synchronized void regulate() throws InterruptedException {
@@ -62,12 +65,6 @@ public class FuzzyUrgencyAndDelayController extends Controller{
         System.out.println("================");
         statistics.update();
         intersection.switchOnSpecifiedPhase(nextPhase);
-    }
-
-    private void changeDefaultPhaseTime(){
-        for(Phase p : intersection.getPhases()){
-            p.setPhaseTime(DEFAULT_PHASE_TIME);
-        }
     }
 
     private FIS loadControlRule(String fileName) throws FileNotFoundException {

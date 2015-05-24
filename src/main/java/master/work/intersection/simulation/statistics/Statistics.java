@@ -19,8 +19,8 @@ import java.util.List;
 public class Statistics {
 
     private Intersection intersection;
-    private List<Parameters> params;
-    private String name;
+    private List<Parameters> phasesInfo;
+    private String controllerName;
     private long startTime;
     private int totalWaitingVehiclesForPhase;
     private int totalNumberOfPhases;
@@ -29,8 +29,8 @@ public class Statistics {
     public Statistics(Controller controller) {
         this.intersection = controller.getIntersection();
         this.startTime = controller.getStartTime();
-        this.name = controller.getName();
-        this.params = new ArrayList<Parameters>();
+        this.controllerName = controller.getName();
+        this.phasesInfo = new ArrayList<Parameters>();
         this.totalWaitingVehiclesForPhase = 0;
         this.totalNumberOfPhases = 0;
         this.totalVehiclesDelayForAllPhases = 0;
@@ -42,7 +42,7 @@ public class Statistics {
             totalWaitingVehiclesForPhase += phase.totalWaitingVehicles();
         }
         this.totalVehiclesDelayForAllPhases += totalWaitingVehiclesForPhase;
-        params.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases, averageVehicleDelay()));
+        phasesInfo.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases, averageVehicleDelay()));
         print2();
         this.totalWaitingVehiclesForPhase = 0;
 
@@ -87,18 +87,6 @@ public class Statistics {
         outputPhaseInfo(intersection.getCurrentPhase());
     }
 
-    public void allPhasesStatistics(){
-        System.out.println("=================================");
-        System.out.println("=============ACTIVE=============");
-        outputPhaseInfo(intersection.getCurrentPhase());
-        System.out.println("=============------=============");
-        for(Phase phase : intersection.getPhases()){
-            if(phase != intersection.getCurrentPhase())
-                outputPhaseInfo(phase);
-        }
-        System.out.println("=================================");
-    }
-
     private void outputPhaseInfo(Phase phase){
         System.out.println("Phase: " + phase.getNumber());
         System.out.println("Urgency: " + phase.getUrgency());
@@ -119,17 +107,25 @@ public class Statistics {
     public void  saveToFile(){
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new File(name + " " + Calendar.getInstance().getTime().getTime()/1000000 +  ".txt"));
+            pw = new PrintWriter(new File(controllerName + " " + Calendar.getInstance().getTime().getTime()/1000000 +  ".txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        for (Parameters p : params) {
+        pw.println(controllerName + ". " + intersection.getName() + ".");
+        pw.println("Total number of phases: " + totalNumberOfPhases);
+        pw.println("Total time: " + (Timer.currentTime() - startTime)/1000);
+        pw.println("Waiting vehicles for the last phase: " + phasesInfo.get(phasesInfo.size() - 1).vehicles);
+        pw.println("Average waiting vehicles for the last phase : " + averageVehicleDelay());
+        pw.println();
+        pw.println("Phase\t" + "Vehicles\t" + "Time\t" + "AverageVehiclesDelay");
+        for (Parameters p : phasesInfo) {
             pw.println(p);
         }
-        pw.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
-        pw.println("Start time: " + startTime);
-        pw.println("Current time: " + Timer.currentTime());
         pw.close();
+    }
+
+    public List<Parameters> getPhasesInfo() {
+        return phasesInfo;
     }
 
     class Parameters{

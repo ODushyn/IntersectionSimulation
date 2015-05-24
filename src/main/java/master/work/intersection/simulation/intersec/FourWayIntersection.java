@@ -12,8 +12,8 @@ import master.work.intersection.simulation.main.Intersection;
 public class FourWayIntersection extends Intersection {
 
     
-    public FourWayIntersection(int phases, int directions) {
-        super(phases, directions);
+    public FourWayIntersection(String name, int phases, int directions) {
+        super(name, phases, directions);
     }
 
     @Override

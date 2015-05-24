@@ -10,8 +10,8 @@ import master.work.intersection.simulation.main.Intersection;
  */
 public class LowTrafficIntersection extends Intersection{
 
-    public LowTrafficIntersection(int phases, int directions) {
-        super(phases, directions);
+    public LowTrafficIntersection(String name, int phases, int directions) {
+        super(name, phases, directions);
     }
 
     @Override

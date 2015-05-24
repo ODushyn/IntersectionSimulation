@@ -2,16 +2,13 @@ package master.work.intersection.simulation.main;
 
 import master.work.intersection.simulation.controller.FuzzyUrgencyAndDelayController;
 import master.work.intersection.simulation.controller.PretimedController;
-import master.work.intersection.simulation.detector.util.PoissonDistribute;
-import master.work.intersection.simulation.intersec.FourWayIntersection;
-import master.work.intersection.simulation.intersec.test.HighTrafficIntersection;
-import master.work.intersection.simulation.intersec.test.LowTrafficIntersection;
 import master.work.intersection.simulation.intersec.test.MiddleTrafficIntersection;
+import master.work.intersection.simulation.statistics.PlotStatisctics;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Main {
 
@@ -22,15 +19,20 @@ public class Main {
         //TODO: consider what parameters should be passed into Intersection
         //Intersection intersection = new FourWayIntersection(4, 12);
 
+        double[] xData = new double[] { 0.0, 100, 200 };
+        double[] yData = new double[] { 2.0, 1.0, 0.0 };
+
+
+
         List<Controller> controllers = new ArrayList<Controller>();
 
         //controllers.add(new PretimedController(new LowTrafficIntersection(4, 12)));
         //controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(4, 12)));
 
-        //controllers.add(new PretimedController(new MiddleTrafficIntersection(4, 12)));
-        //controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection("Middle Traffic", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection("Middle Traffic", 4, 12)));
 
-        controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
+        //controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
         //controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(4, 12)));
 
         for(Controller contr: controllers){
@@ -41,6 +43,11 @@ public class Main {
             }
         }
 
+        try {
+            PlotStatisctics.numOfVehiclesAndTime("Fuzzy Urgency And Delay 1432463.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /*        try {
             testDistribution();
         } catch (InterruptedException e) {

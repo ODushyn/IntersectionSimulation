@@ -1,6 +1,5 @@
 package master.work.intersection.simulation.main;
 
-import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.statistics.Statistics;
 import master.work.intersection.simulation.util.Constants;
 
@@ -16,13 +15,6 @@ public abstract class Controller {
 
     public static final int UNIT_OF_TIME = 1000;
 
-    // General constants
-
-
-    // Direction distribution constants
-    public static double DEFAULT_VEHICLE_ARRIVAL_RATE = 0.3;
-    public static double DEFAULT_VEHICLE_LEAVING_RATE = 0.5;
-
     protected Intersection intersection;
     protected Statistics statistics;
 
@@ -30,23 +22,25 @@ public abstract class Controller {
         //TODO: check initialization to make controller launch after finishing again
         // without creating new controller.
         this.intersection = intersection;
+        specificSettings();
     }
 
     public void launch() throws InterruptedException{
-            System.out.println(name);
-            startTime = Timer.currentTime();
-            statistics = new Statistics(this);
-            intersection.launchDirections();
-            while(isOn()){
-                    regulate();
-            }
-            statistics.print1();
-            statistics.saveToFile();
-            intersection.applyDefaultSetting();
-
+        System.out.println(name);
+        startTime = Timer.currentTime();
+        statistics = new Statistics(this);
+        intersection.launchDirections();
+        while(isOn()){
+                regulate();
+        }
+        statistics.print1();
+        statistics.saveToFile();
+        intersection.applyDefaultSetting();
     }
 
     protected  abstract void regulate() throws InterruptedException;
+
+    protected abstract void specificSettings();
 
     public static boolean isOn(){
         return (Timer.currentTime() - startTime) < simulationDurationTime;

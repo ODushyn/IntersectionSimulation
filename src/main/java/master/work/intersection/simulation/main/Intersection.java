@@ -13,10 +13,12 @@ import master.work.intersection.simulation.util.Constants;
 public abstract class Intersection {
 
     private Direction directions[];
+    private String name;
     protected Phase phases[];
     protected Phase currentPhase;
 
-    public Intersection(int phases, int directions){
+    public Intersection(String name, int phases, int directions){
+        this.name = name;
         this.phases = new Phase[phases];
         this.directions = new Direction[directions];
         createPhases();
@@ -38,7 +40,6 @@ public abstract class Intersection {
             this.currentPhase = getPhases()[currentPhase.getNumber() + 1];
         }
         this.currentPhase.activate();
-/*        System.out.println("Next phase: " + currentPhase.getNumber());*/
     }
 
     public void switchOnSpecifiedPhase(Phase phase){
@@ -120,4 +121,11 @@ public abstract class Intersection {
         this.currentPhase.activate();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -8,9 +8,9 @@ import java.util.Properties;
  */
 public class Constants {
 
-    public static final long SIMULATION_DURATION_TIME = 1800000;
+    public static final long SIMULATION_DURATION_TIME = 20000;
 
-    public static final long DEFAULT_PHASE_TIME = 13000;
+    public static final long DEFAULT_PHASE_TIME = 10000;
     public static final double DEFAULT_TRAFFIC_AR = 0.1;
     public static final double DEFAULT_VEHICLE_LEAVING_RATE = 0.5;
 
