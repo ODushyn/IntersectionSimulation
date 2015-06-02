@@ -22,11 +22,12 @@ public class ArrivalRate extends Thread{
         this.start();
     }
 
-    public double arrivedVehicles() {
+    public int arrivedVehicles() {
         return distribution.arrivedVehicles();
     }
 
     protected void updateArrivalRate(double rate){
+        System.out.println("Raaaate: " + rate);
         this.distribution.setArrivalRate(rate);
     }
 

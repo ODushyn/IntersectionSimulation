@@ -5,6 +5,7 @@ import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
 import master.work.intersection.simulation.main.Timer;
+import master.work.intersection.simulation.util.Constants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +72,18 @@ public class Statistics {
         System.out.println("========================================================================================");
     }
 
+    public double printAverageTimeDelay(){
+        double totalAverageWaiting = 0;
+        for(Phase p : intersection.getPhases()){
+            for(Direction d: p.getDirections()){
+                System.out.println("Direction: " + d.getName() + ". Average time: " + d.getAverageTimeVehicleDelay());
+                totalAverageWaiting += d.getAverageTimeVehicleDelay();
+            }
+        }
+        System.out.println("Average total time waiting: " + totalAverageWaiting/12);
+        return totalAverageWaiting/12;
+    }
+
     private double vehiclesDelayInRedPhases(){
         double total = 0;
         for(Phase phase : intersection.redPhases()){
@@ -107,11 +120,12 @@ public class Statistics {
     public void  saveToFile(){
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new File(controllerName + " " + Calendar.getInstance().getTime().getTime()/1000000 +  ".txt"));
+            pw = new PrintWriter(new File(fileName(controllerName)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         pw.println(controllerName + ". " + intersection.getName() + ".");
+        pw.println("Average total time waiting: " + printAverageTimeDelay());
         pw.println("Total number of phases: " + totalNumberOfPhases);
         pw.println("Total time: " + (Timer.currentTime() - startTime)/1000);
         pw.println("Waiting vehicles for the last phase: " + phasesInfo.get(phasesInfo.size() - 1).vehicles);
@@ -128,6 +142,25 @@ public class Statistics {
         return phasesInfo;
     }
 
+    private String  fileName(String controllerName){
+        String name = "";
+        if("Fuzzy Urgency And Delay".equals(controllerName)){
+            name = "FU";
+        }
+        if("Fuzzy Delay".equals(controllerName)){
+            name = "FD";
+        }
+        if("Pretimed".equals(controllerName)){
+            name = "Pr";
+        }
+        name +="_" + intersection.getName().charAt(0);
+        name +="_" + Constants.DEFAULT_PHASE_TIME;
+        name += " " + Calendar.getInstance().getTime().getTime()/1000000;
+        name += ".txt";
+
+        return name;
+    }
+
     class Parameters{
         long time;
         int vehicles;
@@ -135,7 +168,7 @@ public class Statistics {
         double averageVehiclesDelay;
 
         public Parameters(long time, int vehicles, int phase, double averageVehicleDelay) {
-            this.time = time/60000;
+            this.time = time/1000;
             this.vehicles = vehicles;
             this.phase = phase;
             this.averageVehiclesDelay = averageVehicleDelay;

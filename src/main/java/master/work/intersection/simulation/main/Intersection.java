@@ -51,6 +51,13 @@ public abstract class Intersection {
         System.out.println("==================================================");*/
     }
 
+    public Phase getNextPhaseByDefault(){
+        if(currentPhase.getNumber() == getPhases().length - 1){
+            return getPhases()[0];
+        }
+        return getPhases()[currentPhase.getNumber() + 1];
+    }
+
     public Phase[] redPhases(){
         Phase[] redPhases = new Phase[this.phases.length - 1];
         int i = 0;

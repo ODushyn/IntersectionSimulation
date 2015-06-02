@@ -69,4 +69,13 @@ public class FloatArrivalRate extends ArrivalRate {
         this.intervalChangeTime = Constants.DEFAULT_ARRIVALRATE_CHANGE_TIME;
         return this;
     }
+
+    public FloatArrivalRate trafficRate(){
+        this.bottomArrivalRate = 0.05;
+        this.topArrivalRate = Constants.DEFAULT_HIGH_TRAFFIC_TOP_AR;
+        this.intervalChangeTime = Constants.DEFAULT_ARRIVALRATE_CHANGE_TIME;
+        return this;
+    }
+
+
 }

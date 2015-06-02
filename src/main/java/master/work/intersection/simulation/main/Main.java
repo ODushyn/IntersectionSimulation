@@ -1,9 +1,14 @@
 package master.work.intersection.simulation.main;
 
+import master.work.intersection.simulation.controller.FuzzyDelayController;
 import master.work.intersection.simulation.controller.FuzzyUrgencyAndDelayController;
 import master.work.intersection.simulation.controller.PretimedController;
+import master.work.intersection.simulation.intersec.test.HighTrafficIntersection;
+import master.work.intersection.simulation.intersec.test.LowTrafficIntersection;
 import master.work.intersection.simulation.intersec.test.MiddleTrafficIntersection;
+import master.work.intersection.simulation.intersec.test.MixedTrafficIntersection;
 import master.work.intersection.simulation.statistics.PlotStatisctics;
+import master.work.intersection.simulation.util.Constants;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
 import java.io.IOException;
@@ -19,35 +24,131 @@ public class Main {
         //TODO: consider what parameters should be passed into Intersection
         //Intersection intersection = new FourWayIntersection(4, 12);
 
-        double[] xData = new double[] { 0.0, 100, 200 };
-        double[] yData = new double[] { 2.0, 1.0, 0.0 };
-
-
-
         List<Controller> controllers = new ArrayList<Controller>();
 
-        //controllers.add(new PretimedController(new LowTrafficIntersection(4, 12)));
-        //controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(4, 12)));
+        //Phase 10 sec Fuzzy
+        /*FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker3.fcl";
+        Constants.DEFAULT_PHASE_TIME = 10000;
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
 
-        controllers.add(new PretimedController(new MiddleTrafficIntersection("Middle Traffic", 4, 12)));
-        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection("Middle Traffic", 4, 12)));
 
-        //controllers.add(new PretimedController(new HighTrafficIntersection(4, 12)));
-        //controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(4, 12)));
+        //Phase 10 sec Fuzzy
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker3.fcl";
+        FuzzyDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker3.fcl";
+        Constants.DEFAULT_PHASE_TIME = 10000;
+        controllers.add(new FuzzyDelayController(new LowTrafficIntersection(mode("Low Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyDelayController(new MiddleTrafficIntersection(mode("Middle Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyDelayController(new HighTrafficIntersection(mode("High Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
 
-        for(Controller contr: controllers){
+        //Phase 20 sec
+        Constants.DEFAULT_PHASE_TIME = 15000;
+        controllers.add(new PretimedController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+        //Phase 5 sec
+        Constants.DEFAULT_PHASE_TIME = 20000;
+        controllers.add(new PretimedController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+
+       /* FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker2.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker3.fcl";
+        Constants.DEFAULT_PHASE_TIME = 5000;
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic")  + " DecisionMaker3 - 2", 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        //start from here
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();
+
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker2.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+        //Phase 10 sec Fuzzy
+/*        Constants.DEFAULT_PHASE_TIME = 10000;
+        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker3.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic") + " DecisionMaker3 -2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic") + " DecisionMaker3 - 2", 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic") + " DecisionMaker3 - 2", 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+
+/*        FuzzyUrgencyAndDelayController.DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new FuzzyUrgencyAndDelayController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+        //Phase 10 sec
+/*        Constants.DEFAULT_PHASE_TIME = 10000;
+        controllers.add(new FuzzyUrgencyAndDelayController(new LowTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+        //Phase 15 sec
+/*        Constants.DEFAULT_PHASE_TIME = 15000;
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+        //Phase 20 sec
+/*        Constants.DEFAULT_PHASE_TIME = 20000;
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Low Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new MiddleTrafficIntersection(mode("Middle Traffic"), 4, 12)));
+        controllers.add(new PretimedController(new HighTrafficIntersection(mode("High Traffic"), 4, 12)));
+        startControllers(controllers);
+        controllers.clear();*/
+
+        /*for(Controller contr: controllers){
             try {
                 contr.launch();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
-        try {
+        /*try {
             PlotStatisctics.numOfVehiclesAndTime("Fuzzy Urgency And Delay 1432463.txt");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 /*        try {
             testDistribution();
         } catch (InterruptedException e) {
@@ -55,6 +156,31 @@ public class Main {
         }*/
     }
 
+    private static void startControllers(List<Controller> controllers){
+        for(Controller contr: controllers){
+            try {
+                contr.launch();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private static String mode(String traffic){
+        String phaseTime = "Phase time: " + Constants.DEFAULT_PHASE_TIME + ". ";
+        if(traffic.equals("Low Traffic")){
+            return "L" + phaseTime + "Low: " + Constants.DEFAULT_LOW_TRAFFIC_BOTTOM_AR + "-" + Constants.DEFAULT_LOW_TRAFFIC_TOP_AR;
+        }
+        if(traffic.equals("Middle Traffic")){
+            return  "M" + phaseTime + "Middle: " + Constants.DEFAULT_MID_TRAFFIC_BOTTOM_AR + "-" + Constants.DEFAULT_MID_TRAFFIC_TOP_AR;
+        }
+        if(traffic.equals("High Traffic")){
+            return "H" + phaseTime + "High: " + Constants.DEFAULT_HIGH_TRAFFIC_BOTTOM_AR + "-" + Constants.DEFAULT_HIGH_TRAFFIC_TOP_AR;
+        }
+        if(traffic.equals("Mixed Traffic")) {
+            return "M" + phaseTime + "Mixed: " + Constants.DEFAULT_HIGH_TRAFFIC_BOTTOM_AR + "-" + Constants.DEFAULT_HIGH_TRAFFIC_TOP_AR;
+        }
+        return "";
+    }
     private static void  testDistribution() throws InterruptedException {
         PoissonDistribution p = new PoissonDistribution(0.13);
         for(int i=0; i<10; i++){

@@ -1,7 +1,6 @@
 package master.work.intersection.simulation.controller;
 
 import master.work.intersection.simulation.fuzzy.FuzzyDecisionMaker;
-import master.work.intersection.simulation.fuzzy.FuzzyUrgencyEvaluator;
 import master.work.intersection.simulation.intersec.util.Phase;
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Intersection;
@@ -12,31 +11,26 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 
 /**
- * Created by Oleksander.Dushyn on 4/21/2015.
+ * Created by Oleksander.Dushyn on 6/1/2015.
  */
-public class FuzzyUrgencyAndDelayController extends Controller{
-
-    private static final String NAME = "Fuzzy Urgency And Delay";
-    public static String URGENCY_CONTROL_RULES_PATH = "fuzzy_control_rules/UrgencyEvaluator.fcl";
-    //public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
-    public static String DELAY_CONTROL_RULES_PATH;
+public class FuzzyDelayController extends Controller {
+    private static final String NAME = "Fuzzy Delay";
+   // public static String DELAY_CONTROL_RULES_PATH = "fuzzy_control_rules/DecisionMaker.fcl";
+   public static String DELAY_CONTROL_RULES_PATH;
     private static long DEFAULT_PHASE_TIME = 10000;
 
     private FuzzyDecisionMaker decisionMaker;
-    private FuzzyUrgencyEvaluator urgencyEvaluator;
     private Phase nextPhase;
     private long delay;
 
-    public FuzzyUrgencyAndDelayController(Intersection intersection) {
+    public FuzzyDelayController(Intersection intersection) {
         super(intersection);
         name = NAME;
         try {
-            urgencyEvaluator = new FuzzyUrgencyEvaluator(loadControlRule(URGENCY_CONTROL_RULES_PATH), intersection.getPhases().length);
             decisionMaker = new FuzzyDecisionMaker(loadControlRule(DELAY_CONTROL_RULES_PATH));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -50,7 +44,7 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     @Override
     protected synchronized void regulate() throws InterruptedException {
         this.wait(intersection.getCurrentPhase().getPhaseTime());
-        this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());
+        this.nextPhase = intersection.getNextPhaseByDefault();
         Phase curPhase = intersection.getCurrentPhase();
         System.out.println("====== Phase: " + curPhase.getNumber() + "==========");
         System.out.println("NumberVehiclesWaiting: " + curPhase.totalWaitingVehicles());

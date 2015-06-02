@@ -27,20 +27,24 @@ public class PlotStatisctics {
                 if(line.equals("Phase\tVehicles\tTime\tAverageVehiclesDelay")){
                     while ((line = br.readLine()) != null){
                         String s[] = line.split("\t");
-                        timeList.add(Double.valueOf(s[0]) * 5);
+                        timeList.add(Double.valueOf(s[2]));
                         numOfVehiclesList.add(Double.valueOf(s[1]));
                     }
+                    double time[] = new double[timeList.size()];
+                    double numOfVehicles[] = new double[numOfVehiclesList.size()];
+                    for(int i=0; i < timeList.size(); i++){
+                        time[i] = timeList.get(i);
+                    }
+                    for(int i=0; i < numOfVehiclesList.size(); i++){
+                        numOfVehicles[i] = numOfVehiclesList.get(i);
+                    }
+                    chart.addSeries(file, time , numOfVehicles);
+                    timeList.clear();
+                    numOfVehiclesList.clear();
                 }
             }
-            double time[] = new double[timeList.size()];
-            for(int i=0; i < timeList.size(); i++){
-                time[i] = timeList.get(i);
-            }
-            double numOfVehicles[] = new double[numOfVehiclesList.size()];
-                for(int i=0; i < numOfVehiclesList.size(); i++){
-                    numOfVehicles[i] = numOfVehiclesList.get(i);
-                }
-            chart.addSeries("a", time , numOfVehicles);
+
+
             br.close();
 
             new SwingWrapper(chart).displayChart();

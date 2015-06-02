@@ -34,7 +34,9 @@ public abstract class Controller {
                 regulate();
         }
         statistics.print1();
+        statistics.printAverageTimeDelay();
         statistics.saveToFile();
+
         intersection.applyDefaultSetting();
     }
 
