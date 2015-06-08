@@ -27,4 +27,9 @@ public class PretimedController extends Controller {
     protected void specificSettings() {
 
     }
+
+    @Override
+    protected void wakeUp() throws InterruptedException {
+        this.notify();
+    }
 }

@@ -35,6 +35,9 @@ public class FloatArrivalRate extends ArrivalRate {
     public synchronized void run(){
         while(Controller.isOn()) {
             try {
+                if(Controller.isPaused){
+                    this.wait();
+                }
                 updateArrivalRate();
                 this.wait(intervalChangeTime);
             } catch (InterruptedException e) {

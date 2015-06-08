@@ -32,6 +32,9 @@ public class Direction extends Thread{
         try {
             arrivalRate.control(this);
             while(Controller.isOn()) {
+                if(Controller.isPaused){
+                    this.wait();
+                }
                 simulateVehiclesComeIn();
                 simulateVehicleMoveAway();
                 this.wait(Controller.UNIT_OF_TIME);
@@ -83,6 +86,10 @@ public class Direction extends Thread{
 
     public void setActive(boolean isActive) {
         this.active = isActive;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setArrivalRate(ArrivalRate arrivalRate) {

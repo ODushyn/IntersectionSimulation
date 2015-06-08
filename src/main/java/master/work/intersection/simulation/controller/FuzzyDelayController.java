@@ -42,7 +42,16 @@ public class FuzzyDelayController extends Controller {
     }
 
     @Override
+    protected synchronized void wakeUp() throws InterruptedException {
+        synchronized (this) {
+            System.out.println("here");
+            this.notify();
+        }
+    }
+
+    @Override
     protected synchronized void regulate() throws InterruptedException {
+        System.out.println(intersection.getCurrentPhase().getPhaseTime() + "dddddd");
         this.wait(intersection.getCurrentPhase().getPhaseTime());
         this.nextPhase = intersection.getNextPhaseByDefault();
         Phase curPhase = intersection.getCurrentPhase();

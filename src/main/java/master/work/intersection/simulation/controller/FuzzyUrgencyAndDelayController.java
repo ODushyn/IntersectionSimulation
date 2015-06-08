@@ -48,6 +48,11 @@ public class FuzzyUrgencyAndDelayController extends Controller{
     }
 
     @Override
+    protected void wakeUp() throws InterruptedException {
+        this.notify();
+    }
+
+    @Override
     protected synchronized void regulate() throws InterruptedException {
         this.wait(intersection.getCurrentPhase().getPhaseTime());
         this.nextPhase = urgencyEvaluator.nextGreenPhase(intersection.redPhases());

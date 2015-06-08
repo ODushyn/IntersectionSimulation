@@ -21,15 +21,17 @@ public class Statistics {
 
     private Intersection intersection;
     private List<Parameters> phasesInfo;
+    private Controller controller;
     private String controllerName;
-    private long startTime;
+    //private long startTime;
     private int totalWaitingVehiclesForPhase;
     private int totalNumberOfPhases;
     private int totalVehiclesDelayForAllPhases;
 
     public Statistics(Controller controller) {
+        this.controller = controller;
         this.intersection = controller.getIntersection();
-        this.startTime = controller.getStartTime();
+        //this.startTime = controller.getStartTime();
         this.controllerName = controller.getName();
         this.phasesInfo = new ArrayList<Parameters>();
         this.totalWaitingVehiclesForPhase = 0;
@@ -43,7 +45,7 @@ public class Statistics {
             totalWaitingVehiclesForPhase += phase.totalWaitingVehicles();
         }
         this.totalVehiclesDelayForAllPhases += totalWaitingVehiclesForPhase;
-        phasesInfo.add(new Parameters((Timer.currentTime() - startTime), totalWaitingVehiclesForPhase, totalNumberOfPhases, averageVehicleDelay()));
+        phasesInfo.add(new Parameters((Timer.currentTime() - controller.getStartTime()), totalWaitingVehiclesForPhase, totalNumberOfPhases, averageVehicleDelay()));
         print2();
         this.totalWaitingVehiclesForPhase = 0;
 
@@ -66,7 +68,7 @@ public class Statistics {
 
     public void print2(){
         System.out.println("Total number of phases: " + totalNumberOfPhases);
-        System.out.println("Total time: " + (Timer.currentTime() - startTime)/1000);
+        System.out.println("Total time: " + (Timer.currentTime() - controller.getStartTime())/1000);
         System.out.println("Waiting vehicles on intersection: " + totalWaitingVehiclesForPhase);
         System.out.println("Average waiting vehicles on intersection: " + averageVehicleDelay());
         System.out.println("========================================================================================");
@@ -117,19 +119,24 @@ public class Statistics {
         System.out.println();
     }
 
-    public void  saveToFile(){
+    public void  saveToFile(String fileName){
+        String file = fileName(controllerName);
+        if(fileName != null){
+            file = fileName;
+        }
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new File(fileName(controllerName)));
+            pw = new PrintWriter(new File(file));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         pw.println(controllerName + ". " + intersection.getName() + ".");
         pw.println("Average total time waiting: " + printAverageTimeDelay());
         pw.println("Total number of phases: " + totalNumberOfPhases);
-        pw.println("Total time: " + (Timer.currentTime() - startTime)/1000);
-        pw.println("Waiting vehicles for the last phase: " + phasesInfo.get(phasesInfo.size() - 1).vehicles);
-        pw.println("Average waiting vehicles for the last phase : " + averageVehicleDelay());
+        pw.println("Total time: " + (Timer.currentTime() - controller.getStartTime())/1000);
+        if(phasesInfo.size() !=0)
+        pw.println("Waiting vehicles for the last phase: " + phasesInfo.get(phasesInfo.size()).vehicles);
+        pw.println("Average waiting vehicles for the last phase : " + String.format("%.2f", averageVehicleDelay()));
         pw.println();
         pw.println("Phase\t" + "Vehicles\t" + "Time\t" + "AverageVehiclesDelay");
         for (Parameters p : phasesInfo) {
@@ -176,7 +183,7 @@ public class Statistics {
 
         public String toString() {
             return phase + "\t" + vehicles + "\t"
-                    + time + "\t" + averageVehiclesDelay;
+                    + time + "\t" + String.format("%.2f",averageVehiclesDelay);
         }
     }
 

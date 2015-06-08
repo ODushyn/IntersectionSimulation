@@ -8,7 +8,7 @@ import java.util.Properties;
  */
 public class Constants {
 
-    public static final long SIMULATION_DURATION_TIME = 5000;
+    public static final long SIMULATION_DURATION_TIME = 3600000;
 
     public static  long DEFAULT_PHASE_TIME = 15000;
     public static  double DEFAULT_TRAFFIC_AR = 0.1;

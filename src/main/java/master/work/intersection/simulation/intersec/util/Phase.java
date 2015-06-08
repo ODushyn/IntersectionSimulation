@@ -2,6 +2,7 @@ package master.work.intersection.simulation.intersec.util;
 
 import master.work.intersection.simulation.main.Controller;
 import master.work.intersection.simulation.main.Timer;
+import master.work.intersection.simulation.main.TrafficLight;
 import master.work.intersection.simulation.util.Constants;
 
 /**
@@ -9,7 +10,11 @@ import master.work.intersection.simulation.util.Constants;
  */
 public class Phase {
     private int number;
+    public TrafficLight light = TrafficLight.RED;
     private Direction directions[];
+    private long redTime;
+    private long greenTime;
+
     private long redStartTime;
     private long greenStartTime;
     private long phaseTime;
@@ -23,16 +28,24 @@ public class Phase {
     }
 
     public long redWaitingTime(){
+        /*if(Controller.isPaused){
+            return redTime;
+        }*/
         if(this.redStartTime == 0){
             return 0;
         }
+        //redTime = Timer.currentTime() - redStartTime;
         return Timer.currentTime() - redStartTime;
     }
 
     public long greenWaitingTime(){
+       /* if(Controller.isPaused){
+            return greenTime;
+        }*/
         if(this.greenStartTime == 0){
             return 0;
         }
+        //greenTime = Timer.currentTime() - greenStartTime;
         return Timer.currentTime() - greenStartTime;
     }
 
@@ -42,6 +55,11 @@ public class Phase {
             vehiclesTotal += d.getQueue();
         }
         return vehiclesTotal;
+    }
+
+    public void refreshPhaseTime(){
+        this.redStartTime = Timer.currentTime();
+        this.greenStartTime = Timer.currentTime();
     }
 
     /**
